@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
+using UnityEngine; // For Debug.Log
 
 namespace Game
 {
@@ -17,6 +18,9 @@ namespace Game
                 {
                     float3 direction = math.normalize(targetPosition.Value - localTransform.Position);
                     localTransform.Position += direction * deltaTime; // Adjust speed as necessary
+
+                    // Debug logging to verify movement logic
+                    Debug.Log($"Entity moving to {targetPosition.Value}. Current position: {localTransform.Position}");
                 }).ScheduleParallel();
         }
     }

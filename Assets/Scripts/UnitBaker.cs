@@ -4,6 +4,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Physics;
+using Unity.Physics.Authoring;
 
 namespace Game
 {
@@ -53,7 +54,7 @@ namespace Game
             var unityCollider = authoring.unitMesh.GetComponent<UnityEngine.Collider>();
             if (unityCollider != null)
             {
-                entityManager.AddComponentObject(entity, unityCollider);
+                AddColliderComponent(entity, unityCollider);
                 Debug.Log("Added Collider component");
             }
 
@@ -63,6 +64,24 @@ namespace Game
                 entityManager.AddComponentObject(entity, rigidbody);
                 Debug.Log("Added Rigidbody component");
             }
+        }
+
+        private void AddColliderComponent(Entity entity, UnityEngine.Collider unityCollider)
+        {
+            // Convert UnityEngine.Collider to Unity.Physics.Collider
+            if (unityCollider is UnityEngine.BoxCollider boxCollider)
+            {
+                var boxGeometry = new BoxGeometry
+                {
+                    Center = boxCollider.center,
+                    Size = boxCollider.size,
+                    Orientation = quaternion.identity
+                };
+
+                var physicsCollider = Unity.Physics.BoxCollider.Create(boxGeometry, new CollisionFilter(), new Unity.Physics.Material());
+                entityManager.AddComponentData(entity, new PhysicsCollider { Value = physicsCollider });
+            }
+            // Add more collider types as needed (SphereCollider, CapsuleCollider, etc.)
         }
     }
 }

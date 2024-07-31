@@ -9,6 +9,7 @@ namespace Game
     {
         public GameObject unitPrefab;
         public GameObject spawnPoint;
+        public GameObject targetPositionObject;
 
         void Start()
         {
@@ -37,6 +38,14 @@ namespace Game
                 var entity = entityManager.CreateEntity();
                 var baker = new UnitBaker(entityManager);
                 baker.Bake(entity, unitAuthoring);
+
+                // Set the initial target position based on the targetPositionObject
+                if (targetPositionObject != null)
+                {
+                    float3 targetPosition = (float3)targetPositionObject.transform.position;
+                    entityManager.AddComponentData(entity, new TargetPosition { Value = targetPosition });
+                }
+
                 Debug.Log("Baking completed for unitPrefab.");
                 return entity;
             }

@@ -7,6 +7,12 @@ namespace Game
 {
     public partial class UnitSpawnSystem : SystemBase
     {
+        protected override void OnCreate()
+        {
+            RequireForUpdate<UnitPrefab>();
+            RequireForUpdate<SpawnPoint>();
+        }
+
         protected override void OnUpdate()
         {
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
@@ -14,8 +20,8 @@ namespace Game
                 var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
                 // Retrieve the unit prefab entity from the singleton component
-                Entity unitPrefabEntity = SystemAPI.GetSingleton<UnitPrefab>().Value;
-                float3 spawnPoint = SystemAPI.GetSingleton<SpawnPoint>().Value;
+                Entity unitPrefabEntity = GetSingleton<UnitPrefab>().Value;
+                float3 spawnPoint = GetSingleton<SpawnPoint>().Value;
 
                 // Instantiate a new unit from the prefab
                 Entity newUnit = entityManager.Instantiate(unitPrefabEntity);
