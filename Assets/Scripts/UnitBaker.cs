@@ -50,38 +50,82 @@ namespace Game
 
             Debug.Log("Added RenderMesh components");
 
-            // Add built-in Physics components
-            var unityCollider = authoring.unitMesh.GetComponent<UnityEngine.Collider>();
-            if (unityCollider != null)
+            // Add Physics components
+            AddPhysicsComponents(entity, authoring);
+        }
+
+        private void AddPhysicsComponents(Entity entity, UnitAuthoring authoring)
+        {
+            var boxCollider = authoring.unitMesh.GetComponent<UnityEngine.BoxCollider>();
+            if (boxCollider != null)
             {
-                AddColliderComponent(entity, unityCollider);
-                Debug.Log("Added Collider component");
+                AddBoxCollider(entity, boxCollider);
+                Debug.Log("Added BoxCollider component");
             }
 
             var rigidbody = authoring.unitMesh.GetComponent<UnityEngine.Rigidbody>();
             if (rigidbody != null)
             {
-                entityManager.AddComponentObject(entity, rigidbody);
+                AddRigidbodyComponent(entity, rigidbody);
                 Debug.Log("Added Rigidbody component");
             }
         }
 
-        private void AddColliderComponent(Entity entity, UnityEngine.Collider unityCollider)
+        private void AddBoxCollider(Entity entity, UnityEngine.BoxCollider boxCollider)
         {
-            // Convert UnityEngine.Collider to Unity.Physics.Collider
-            if (unityCollider is UnityEngine.BoxCollider boxCollider)
+            var colliderGeometry = new BoxGeometry
             {
-                var boxGeometry = new BoxGeometry
-                {
-                    Center = boxCollider.center,
-                    Size = boxCollider.size,
-                    Orientation = quaternion.identity
-                };
+                Center = boxCollider.center,
+                Size = boxCollider.size * 2f, // Making the collider larger for testing
+                Orientation = quaternion.identity
+            };
 
-                var physicsCollider = Unity.Physics.BoxCollider.Create(boxGeometry, new CollisionFilter(), new Unity.Physics.Material());
-                entityManager.AddComponentData(entity, new PhysicsCollider { Value = physicsCollider });
-            }
-            // Add more collider types as needed (SphereCollider, CapsuleCollider, etc.)
+            var collisionFilter = new CollisionFilter
+            {
+                BelongsTo = ~0u,
+                CollidesWith = ~0u,
+                GroupIndex = 0
+            };
+
+            var physicsCollider = Unity.Physics.BoxCollider.Create(colliderGeometry, collisionFilter, new Unity.Physics.Material
+            {
+                Friction = 0.5f,
+                Restitution = 0.1f
+            });
+
+            entityManager.AddComponentData(entity, new PhysicsCollider { Value = physicsCollider });
+        }
+
+        private void AddRigidbodyComponent(Entity entity, UnityEngine.Rigidbody unityRigidbody)
+        {
+            var massProperties = new MassProperties
+            {
+                MassDistribution = new MassDistribution
+                {
+                    Transform = RigidTransform.identity,
+                    InertiaTensor = new float3(1f, 1f, 1f)
+                },
+                Volume = 1f,
+                AngularExpansionFactor = 1f
+            };
+
+            var physicsMass = PhysicsMass.CreateDynamic(massProperties, unityRigidbody.mass);
+            var physicsVelocity = new PhysicsVelocity
+            {
+                Linear = float3.zero,
+                Angular = float3.zero
+            };
+
+            var physicsDamping = new PhysicsDamping
+            {
+                Linear = unityRigidbody.linearDamping,
+                Angular = unityRigidbody.angularDamping
+            };
+
+            entityManager.AddComponentData(entity, physicsMass);
+            entityManager.AddComponentData(entity, physicsVelocity);
+            entityManager.AddComponentData(entity, physicsDamping);
+            entityManager.AddComponentData(entity, new PhysicsGravityFactor { Value = 1.0f });
         }
     }
 }

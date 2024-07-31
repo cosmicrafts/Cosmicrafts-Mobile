@@ -14,13 +14,13 @@ namespace Game
 
             Entities
                 .WithAll<TargetPosition>()
-                .ForEach((ref LocalTransform localTransform, in TargetPosition targetPosition) =>
+                .ForEach((Entity entity, ref LocalTransform localTransform, in TargetPosition targetPosition) =>
                 {
                     float3 direction = math.normalize(targetPosition.Value - localTransform.Position);
                     localTransform.Position += direction * deltaTime; // Adjust speed as necessary
 
                     // Debug logging to verify movement logic
-                    Debug.Log($"Entity moving to {targetPosition.Value}. Current position: {localTransform.Position}");
+                    Debug.Log($"Entity {entity.Index} moving to {targetPosition.Value}. Current position: {localTransform.Position}");
                 }).ScheduleParallel();
         }
     }
