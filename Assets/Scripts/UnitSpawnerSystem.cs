@@ -20,8 +20,8 @@ namespace Game
                 var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
                 // Retrieve the unit prefab entity from the singleton component
-                Entity unitPrefabEntity = GetSingleton<UnitPrefab>().Value;
-                float3 spawnPoint = GetSingleton<SpawnPoint>().Value;
+                Entity unitPrefabEntity = SystemAPI.GetSingleton<UnitPrefab>().Value;
+                float3 spawnPoint = SystemAPI.GetSingleton<SpawnPoint>().Value;
 
                 // Instantiate a new unit from the prefab
                 Entity newUnit = entityManager.Instantiate(unitPrefabEntity);
