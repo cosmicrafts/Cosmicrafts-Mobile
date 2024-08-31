@@ -9,7 +9,6 @@ namespace Game.Components
         public int ID;
         public int PlayerId;
         public Team MyTeam;
-        public bool IsFake;
         public int HitPoints;
         public int MaxHitPoints;
         public int Shield;
@@ -19,14 +18,13 @@ namespace Game.Components
 
     public static class UnitDataBuilder
     {
-        public static BlobAssetReference<UnitData> CreateUnitData(int id, int playerId, Team team, bool isFake, int hitPoints, int maxHitPoints, int shield, int maxShield, bool isDead)
+        public static BlobAssetReference<UnitData> CreateUnitData(int id, int playerId, Team team, int hitPoints, int maxHitPoints, int shield, int maxShield, bool isDead)
         {
             var builder = new BlobBuilder(Allocator.Temp);
             ref var unitData = ref builder.ConstructRoot<UnitData>();
             unitData.ID = id;
             unitData.PlayerId = playerId;
             unitData.MyTeam = team;
-            unitData.IsFake = isFake;
             unitData.HitPoints = hitPoints;
             unitData.MaxHitPoints = maxHitPoints;
             unitData.Shield = shield;

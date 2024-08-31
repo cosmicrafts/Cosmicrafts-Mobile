@@ -13,12 +13,6 @@ namespace Game.Controllers
             CanGenerateEnergy = canGenerate;
         }
 
-        public bool ImFake()
-        {
-            // Determine if the player is fake
-            return false;
-        }
-
         public int GetVsId()
         {
             // Get the opponent's ID

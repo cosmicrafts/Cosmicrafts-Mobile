@@ -7,6 +7,5 @@ namespace Game.Components
         public int ID;
         public int PlayerId;
         public Team MyTeam;
-        public bool IsFake;
     }
 }

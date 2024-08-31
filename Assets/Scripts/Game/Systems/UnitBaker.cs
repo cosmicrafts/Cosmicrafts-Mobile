@@ -12,13 +12,11 @@ namespace Game.Systems
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-            // Add the necessary components
             AddComponent(entity, new UnitComponent
             {
                 ID = authoring.ID,
                 PlayerId = authoring.PlayerId,
                 MyTeam = authoring.MyTeam,
-                IsFake = authoring.IsFake
             });
 
             AddComponent(entity, new HealthComponent
