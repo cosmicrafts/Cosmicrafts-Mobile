@@ -44,7 +44,7 @@ public partial class ServerSystem : SystemBase
                 //we can set here the location where to instantiate
                 commandBuffer.SetComponent(unit, new LocalTransform()
                 {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 0, UnityEngine.Random.Range(-10f, 10f) ),
+                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 10f, UnityEngine.Random.Range(-10f, 10f) ),
                     Rotation = quaternion.identity,
                     Scale = 1f
                     
