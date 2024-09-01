@@ -4,6 +4,8 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 public struct ServerMessageRpcCommand : IRpcCommand
 {
@@ -32,6 +34,34 @@ public partial class ServerSystem : SystemBase
             Debug.Log(command.ValueRO.message + " from client index " + request.ValueRO.SourceConnection.Index + " version " + request.ValueRO.SourceConnection.Version);
             commandBuffer.DestroyEntity(entity);
         }
+
+        foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<SpawnUnitRpcCommand>>().WithEntityAccess())
+        {
+            PrefabsData prefabs;
+            if (SystemAPI.TryGetSingleton<PrefabsData>(out prefabs) && prefabs.prefab != null)
+            {
+                Entity unit = commandBuffer.Instantiate(prefabs.prefab);
+                //we can set here the location where to instantiate
+                commandBuffer.SetComponent(unit, new LocalTransform()
+                {
+                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 0, UnityEngine.Random.Range(-10f, 10f) ),
+                    Rotation = quaternion.identity,
+                    Scale = 1f
+                    
+                });
+
+                //set the owner
+                var networkId = _clients[request.ValueRO.SourceConnection];
+                commandBuffer.SetComponent(unit, new GhostOwner()
+                {
+                    NetworkId = networkId.Value
+                });
+
+
+                commandBuffer.DestroyEntity(entity);
+            }
+        }
+
         foreach (var (id, entity) in SystemAPI.Query<RefRO<NetworkId>>().WithNone<InitializedClient>().WithEntityAccess())
         {
             commandBuffer.AddComponent<InitializedClient>(entity);
