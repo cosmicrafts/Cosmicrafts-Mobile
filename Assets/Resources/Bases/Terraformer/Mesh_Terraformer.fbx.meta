@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 0f2ca8a2a6d7753448a4c492e194dbd9
 ModelImporter:
-  serializedVersion: 21202
+  serializedVersion: 22200
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
@@ -33,15 +33,13 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 1
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -173,6 +171,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -200,6 +199,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 0
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -213,7 +213,664 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: Mesh_Terraformer(Clone)
+      parentName: 
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Geo_Grp
+      parentName: Mesh_Terraformer(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Geo
+      parentName: Terraformer_Geo_Grp
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Joints_Grp
+      parentName: Mesh_Terraformer(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_InGame_Jnt
+      parentName: Terraformer_Joints_Grp
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_CoG_Jnt
+      parentName: Terraformer_InGame_Jnt
+      position: {x: -0, y: 0.084284134, z: 0}
+      rotation: {x: 0, y: 0.06760241, z: -0, w: 0.9977124}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Body_Jnt
+      parentName: Terraformer_CoG_Jnt
+      position: {x: -0, y: -9.439913, z: 0}
+      rotation: {x: 0, y: -1.2246469e-16, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Parts_CoG_Jnt
+      parentName: Terraformer_CoG_Jnt
+      position: {x: -0, y: -9.491127, z: 0}
+      rotation: {x: 0, y: -1.2246469e-16, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_01_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: -1.6967168, y: -0.5276985, z: 1.6967168}
+      rotation: {x: 0, y: 0.38268346, z: -0, w: 0.92387956}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_07_Jnt
+      parentName: Terraformer_Bottom_Root_01_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 6.661338e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_02_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: -2.39952, y: -0.5276985, z: 1.2212453e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_08_Jnt
+      parentName: Terraformer_Bottom_Root_02_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 6.3837824e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_03_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: -1.6967168, y: -0.5276985, z: -1.6967168}
+      rotation: {x: 0, y: -0.38268346, z: -0, w: 0.92387956}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_01_Jnt
+      parentName: Terraformer_Bottom_Root_03_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 7.5495166e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_04_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: -2.3869795e-15, y: -0.5276985, z: -2.39952}
+      rotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_02_Jnt
+      parentName: Terraformer_Bottom_Root_04_Jnt
+      position: {x: -1.560631, y: 0.37850454, z: 6.3837824e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_05_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: 1.6967168, y: -0.5276985, z: -1.6967168}
+      rotation: {x: 3.3138708e-17, y: 0.92387956, z: -3.3138708e-17, w: -0.38268346}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_03_Jnt
+      parentName: Terraformer_Bottom_Root_05_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 5.3290705e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_06_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: 2.39952, y: -0.5276985, z: 7.8825835e-15}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_04_Jnt
+      parentName: Terraformer_Bottom_Root_06_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 6.27276e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_07_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: 1.6967168, y: -0.5276985, z: 1.6967168}
+      rotation: {x: 8.0003916e-17, y: 0.92387956, z: -8.0003916e-17, w: 0.38268346}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_05_Jnt
+      parentName: Terraformer_Bottom_Root_07_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 7.993606e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Root_08_Jnt
+      parentName: Terraformer_Bottom_Parts_CoG_Jnt
+      position: {x: -0, y: -0.5276985, z: 2.39952}
+      rotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Bottom_Screw_06_Jnt
+      parentName: Terraformer_Bottom_Root_08_Jnt
+      position: {x: -1.560631, y: 0.3785045, z: 6.27276e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claws_CoG_Jnt
+      parentName: Terraformer_CoG_Jnt
+      position: {x: -0, y: -8.068803, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_01_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: 1.4103711, y: -0.019473433, z: -1.4103711}
+      rotation: {x: 0, y: 0.38268346, z: -0, w: 0.92387956}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_07_Jnt
+      parentName: Terraformer_Roof_Root_Claw_01_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: 1.110223e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_02_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: -3.5527137e-15, y: -0.019473433, z: -1.994566}
+      rotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_06_Jnt
+      parentName: Terraformer_Roof_Root_Claw_02_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: -5.551115e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_03_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: -1.4103711, y: -0.019473433, z: -1.4103711}
+      rotation: {x: 8.0003916e-17, y: 0.92387956, z: -8.0003916e-17, w: 0.38268346}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_05_Jnt
+      parentName: Terraformer_Roof_Root_Claw_03_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: 5.916457e-31}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_04_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: -1.994566, y: -0.019473433, z: 1.3877788e-15}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_04_Jnt
+      parentName: Terraformer_Roof_Root_Claw_04_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: 2.220446e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_05_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: -1.4103711, y: -0.019473433, z: 1.4103711}
+      rotation: {x: 3.3138708e-17, y: 0.92387956, z: -3.3138708e-17, w: -0.38268346}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_03_Jnt
+      parentName: Terraformer_Roof_Root_Claw_05_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: -2.220446e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_06_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: -3.8857806e-16, y: -0.019473433, z: 1.994566}
+      rotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_02_Jnt
+      parentName: Terraformer_Roof_Root_Claw_06_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: -3.9443045e-31}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_07_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: 1.994566, y: -0.019473433, z: 6.8278716e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_08_Jnt
+      parentName: Terraformer_Roof_Root_Claw_07_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: 4.440892e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Claw_08_Jnt
+      parentName: Terraformer_Roof_Claws_CoG_Jnt
+      position: {x: 1.4103711, y: -0.019473433, z: 1.4103711}
+      rotation: {x: 0, y: -0.38268346, z: -0, w: 0.92387956}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Claw_09_Jnt
+      parentName: Terraformer_Roof_Root_Claw_08_Jnt
+      position: {x: 0.061947107, y: 0.09292048, z: 3.7747583e-15}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Finn_CoG_Jnt
+      parentName: Terraformer_CoG_Jnt
+      position: {x: -0, y: -8.068803, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_01_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: 0.84743565, y: 8.881784e-16, z: 1.6653345e-16}
+      rotation: {x: 0.5, y: -0.5, z: -0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_07_Jnt
+      parentName: Terraformer_Roof_Root_Finn_01_Jnt
+      position: {x: -0.3123411, y: 0.00000049965456, z: 0.04143664}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_02_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: 0.5992275, y: 8.881784e-16, z: 0.5992275}
+      rotation: {x: 0.6532815, y: -0.6532815, z: -0.27059805, w: 0.27059805}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_08_Jnt
+      parentName: Terraformer_Roof_Root_Finn_02_Jnt
+      position: {x: -0.3123411, y: 0.0000003582482, z: 0.041416284}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_03_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: 2.6506575e-15, y: 8.881784e-16, z: 0.84743565}
+      rotation: {x: -0.7071068, y: 0.7071068, z: -8.659561e-17, w: -8.7157646e-33}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_01_Jnt
+      parentName: Terraformer_Roof_Root_Finn_03_Jnt
+      position: {x: -0.3123411, y: 2.6124616e-15, z: 0.041436132}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_04_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: -0.5992275, y: 8.881784e-16, z: 0.5992275}
+      rotation: {x: 0.6532815, y: -0.6532815, z: 0.27059805, w: -0.27059805}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_02_Jnt
+      parentName: Terraformer_Roof_Root_Finn_04_Jnt
+      position: {x: -0.3123411, y: -0.0000003582482, z: 0.041416284}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_05_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: -0.84743565, y: 8.881784e-16, z: -1.7763568e-15}
+      rotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_03_Jnt
+      parentName: Terraformer_Roof_Root_Finn_05_Jnt
+      position: {x: -0.3123411, y: -0.00000049965456, z: 0.04143664}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_06_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: -0.5992275, y: 8.881784e-16, z: -0.5992275}
+      rotation: {x: -0.27059805, y: 0.27059805, z: -0.6532815, w: 0.6532815}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_04_Jnt
+      parentName: Terraformer_Roof_Root_Finn_06_Jnt
+      position: {x: -0.31234157, y: -0.0000003582482, z: 0.041417003}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_07_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: -9.7144515e-17, y: 8.881784e-16, z: -0.84743565}
+      rotation: {x: 0, y: -0, z: -0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_05_Jnt
+      parentName: Terraformer_Roof_Root_Finn_07_Jnt
+      position: {x: -0.31234205, y: 1.9772657e-16, z: 0.041437145}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Finn_08_Jnt
+      parentName: Terraformer_Roof_Finn_CoG_Jnt
+      position: {x: 0.5992275, y: 8.881784e-16, z: -0.5992275}
+      rotation: {x: 0.27059805, y: -0.27059805, z: -0.6532815, w: 0.6532815}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Root_Flipper_06_Jnt
+      parentName: Terraformer_Roof_Root_Finn_08_Jnt
+      position: {x: -0.31234157, y: 0.0000003582482, z: 0.041417003}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Roof_Parts_CoG_Jnt
+      parentName: Terraformer_CoG_Jnt
+      position: {x: -0, y: 0.89149773, z: 0}
+      rotation: {x: 8.210984e-17, y: 0.89510995, z: -8.210984e-17, w: 0.4458455}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_02_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: 6.357353, y: 0.45991737, z: 1.15463195e-14}
+      rotation: {x: 0.7204225, y: 0.69353545, z: -9.9086946e-17, w: 1.8038394e-16}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_13_Jnt
+      parentName: Terraformer_Top_Part_Root_02_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_14_Jnt
+      parentName: Terraformer_Top_Part_Root_02_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: -0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_04_Jnt
+      parentName: Terraformer_Top_Part_Root_02_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: -1.2212453e-15}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_02_Jnt
+      parentName: Terraformer_Top_Part_Root_02_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: -1.2212453e-15}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_07_Jnt
+      parentName: Terraformer_Top_Down_Root_02_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_08_Jnt
+      parentName: Terraformer_Top_Down_Root_02_Jnt
+      position: {x: -0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_15_Jnt
+      parentName: Terraformer_Top_Part_Root_02_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_16_Jnt
+      parentName: Terraformer_Top_Part_Root_02_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_03_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: 4.4953275, y: 0.45991737, z: 4.4953275}
+      rotation: {x: 0.6655836, y: 0.64074326, z: 0.27569374, w: 0.2654045}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_15_Jnt
+      parentName: Terraformer_Top_Part_Root_03_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_16_Jnt
+      parentName: Terraformer_Top_Part_Root_03_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: -0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_03_Jnt
+      parentName: Terraformer_Top_Part_Root_03_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: -2.5760644e-16}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_03_Jnt
+      parentName: Terraformer_Top_Part_Root_03_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: -5.298713e-15}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_09_Jnt
+      parentName: Terraformer_Top_Down_Root_03_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_10_Jnt
+      parentName: Terraformer_Top_Down_Root_03_Jnt
+      position: {x: -0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_01_Jnt
+      parentName: Terraformer_Top_Part_Root_03_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_02_Jnt
+      parentName: Terraformer_Top_Part_Root_03_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_04_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: 3.5527137e-15, y: 0.45991737, z: 6.357353}
+      rotation: {x: 0.5094156, y: 0.49040362, z: 0.5094156, w: 0.49040362}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_01_Jnt
+      parentName: Terraformer_Top_Part_Root_04_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_02_Jnt
+      parentName: Terraformer_Top_Part_Root_04_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: -0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_06_Jnt
+      parentName: Terraformer_Top_Part_Root_04_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: -1.3045121e-15}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_04_Jnt
+      parentName: Terraformer_Top_Part_Root_04_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: -8.6042284e-16}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_11_Jnt
+      parentName: Terraformer_Top_Down_Root_04_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_12_Jnt
+      parentName: Terraformer_Top_Down_Claw_11_Jnt
+      position: {x: 0.113773435, y: 0, z: 0}
+      rotation: {x: -6.123235e-17, y: -1, z: 0.000000059604638, w: -6.1232336e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_03_Jnt
+      parentName: Terraformer_Top_Part_Root_04_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_04_Jnt
+      parentName: Terraformer_Top_Part_Root_04_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_05_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: -4.4953275, y: 0.45991737, z: 4.4953275}
+      rotation: {x: 0.27569374, y: 0.26540452, z: 0.6655836, w: 0.6407432}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_03_Jnt
+      parentName: Terraformer_Top_Part_Root_05_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_04_Jnt
+      parentName: Terraformer_Top_Claw_03_Jnt
+      position: {x: -0.0006099308, y: 0.00083382305, z: 0.49818182}
+      rotation: {x: 0.0000000016007103, y: -0.000000035506666, z: 0.000000029802315,
+        w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_07_Jnt
+      parentName: Terraformer_Top_Part_Root_05_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: -1.0524079e-15}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_05_Jnt
+      parentName: Terraformer_Top_Part_Root_05_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: -5.111742e-16}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_13_Jnt
+      parentName: Terraformer_Top_Down_Root_05_Jnt
+      position: {x: -0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_14_Jnt
+      parentName: Terraformer_Top_Down_Root_05_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: 6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_05_Jnt
+      parentName: Terraformer_Top_Part_Root_05_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_06_Jnt
+      parentName: Terraformer_Top_Part_Root_05_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_06_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: -6.357353, y: 0.45991737, z: 8.881784e-16}
+      rotation: {x: 0, y: 0, z: 0.7204225, w: 0.69353545}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_05_Jnt
+      parentName: Terraformer_Top_Part_Root_06_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_06_Jnt
+      parentName: Terraformer_Top_Part_Root_06_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: -0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_01_Jnt
+      parentName: Terraformer_Top_Part_Root_06_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: -4.440892e-16}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_06_Jnt
+      parentName: Terraformer_Top_Part_Root_06_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: 3.9443045e-31}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_15_Jnt
+      parentName: Terraformer_Top_Down_Root_06_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_16_Jnt
+      parentName: Terraformer_Top_Down_Claw_15_Jnt
+      position: {x: 0.11377272, y: 0, z: 0}
+      rotation: {x: -0.000000029802319, y: -1, z: -0.000000029802319, w: 0.000000029802319}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_07_Jnt
+      parentName: Terraformer_Top_Part_Root_06_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_08_Jnt
+      parentName: Terraformer_Top_Part_Root_06_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_07_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: -4.4953275, y: 0.45991737, z: -4.4953275}
+      rotation: {x: -0.27569374, y: -0.26540452, z: 0.6655836, w: 0.6407432}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_07_Jnt
+      parentName: Terraformer_Top_Part_Root_07_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_08_Jnt
+      parentName: Terraformer_Top_Part_Root_07_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: -0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_02_Jnt
+      parentName: Terraformer_Top_Part_Root_07_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: -1.04544194e-16}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_07_Jnt
+      parentName: Terraformer_Top_Part_Root_07_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: 1.4671153e-15}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_01_Jnt
+      parentName: Terraformer_Top_Down_Root_07_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: 6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_02_Jnt
+      parentName: Terraformer_Top_Down_Root_07_Jnt
+      position: {x: -0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_09_Jnt
+      parentName: Terraformer_Top_Part_Root_07_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_10_Jnt
+      parentName: Terraformer_Top_Part_Root_07_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_08_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: -4.440892e-16, y: 0.45991737, z: -6.357353}
+      rotation: {x: 0.5094156, y: 0.49040362, z: -0.5094156, w: -0.49040362}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_09_Jnt
+      parentName: Terraformer_Top_Part_Root_08_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_10_Jnt
+      parentName: Terraformer_Top_Part_Root_08_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: -0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_08_Jnt
+      parentName: Terraformer_Top_Part_Root_08_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: 8.5348395e-16}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_08_Jnt
+      parentName: Terraformer_Top_Part_Root_08_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: 3.07393e-15}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_03_Jnt
+      parentName: Terraformer_Top_Down_Root_08_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: 6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_04_Jnt
+      parentName: Terraformer_Top_Down_Root_08_Jnt
+      position: {x: -0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_11_Jnt
+      parentName: Terraformer_Top_Part_Root_08_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_12_Jnt
+      parentName: Terraformer_Top_Part_Root_08_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Part_Root_09_Jnt
+      parentName: Terraformer_Roof_Parts_CoG_Jnt
+      position: {x: 4.4953275, y: 0.45991737, z: -4.4953275}
+      rotation: {x: 0.6655836, y: 0.64074326, z: -0.27569374, w: -0.2654045}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_11_Jnt
+      parentName: Terraformer_Top_Part_Root_09_Jnt
+      position: {x: 0.2063738, y: 0.03124064, z: 0.249091}
+      rotation: {x: 0.4711464, y: 0.88205445, z: -0.00044858124, w: -0.0009347951}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Claw_12_Jnt
+      parentName: Terraformer_Top_Claw_11_Jnt
+      position: {x: -0.000609906, y: 0.0008338396, z: 0.49818182}
+      rotation: {x: 0.000000027852355, y: -0.000000049651117, z: -0.000000029802312,
+        w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Cylinder_05_Jnt
+      parentName: Terraformer_Top_Part_Root_09_Jnt
+      position: {x: -0.5130921, y: 0.23823363, z: 1.3582343e-15}
+      rotation: {x: 0.040675674, y: -0.00040928682, z: 0.0049797622, w: 0.99915993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Root_01_Jnt
+      parentName: Terraformer_Top_Part_Root_09_Jnt
+      position: {x: -1.3037093, y: 0.023736414, z: 4.8762535e-15}
+      rotation: {x: 0.5020465, y: 0.49794507, z: 0.5020465, w: -0.49794507}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_05_Jnt
+      parentName: Terraformer_Top_Down_Root_01_Jnt
+      position: {x: 0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: 6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Down_Claw_06_Jnt
+      parentName: Terraformer_Top_Down_Root_01_Jnt
+      position: {x: -0.056887, y: -0.10372601, z: 1.3137455}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_13_Jnt
+      parentName: Terraformer_Top_Part_Root_09_Jnt
+      position: {x: -0.5097235, y: 0.0046129692, z: 0.29536065}
+      rotation: {x: -0.46253768, y: 0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Terraformer_Top_Flipper_14_Jnt
+      parentName: Terraformer_Top_Part_Root_09_Jnt
+      position: {x: -0.50971913, y: 0.0046142964, z: -0.295361}
+      rotation: {x: 0.46253768, y: -0.5348448, z: -0.46253768, w: 0.5348448}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -230,8 +887,10 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
