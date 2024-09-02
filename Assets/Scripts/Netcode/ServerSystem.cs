@@ -35,13 +35,13 @@ public partial class ServerSystem : SystemBase
             commandBuffer.DestroyEntity(entity);
         }
 
+        //Spawn Unit
         foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<SpawnUnitRpcCommand>>().WithEntityAccess())
         {
             PrefabsData prefabs;
-            if (SystemAPI.TryGetSingleton<PrefabsData>(out prefabs) && prefabs.prefab != null)
+            if (SystemAPI.TryGetSingleton<PrefabsData>(out prefabs) && prefabs.unit != null)
             {
-                Entity unit = commandBuffer.Instantiate(prefabs.prefab);
-                //we can set here the location where to instantiate
+                Entity unit = commandBuffer.Instantiate(prefabs.unit);
                 commandBuffer.SetComponent(unit, new LocalTransform()
                 {
                     Position = new float3(UnityEngine.Random.Range(-10f, 10f), 10f, UnityEngine.Random.Range(-10f, 10f) ),
@@ -57,15 +57,41 @@ public partial class ServerSystem : SystemBase
                     NetworkId = networkId.Value
                 });
 
+                commandBuffer.AppendToBuffer(request.ValueRO.SourceConnection, new LinkedEntityGroup()
+                {
+                    Value = unit
+                });
 
                 commandBuffer.DestroyEntity(entity);
             }
         }
 
+        //Spawn Player
         foreach (var (id, entity) in SystemAPI.Query<RefRO<NetworkId>>().WithNone<InitializedClient>().WithEntityAccess())
         {
             commandBuffer.AddComponent<InitializedClient>(entity);
-            SendMessageRpc("Client connected with id = " + id.ValueRO.Value, ConnectionManager.serverWorld);
+            PrefabsData prefabManager = SystemAPI.GetSingleton<PrefabsData>();
+            if (prefabManager.player != null)
+            {
+                Entity player = commandBuffer.Instantiate(prefabManager.player);
+                commandBuffer.SetComponent(player, new LocalTransform()
+                {
+                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f)),
+                    Rotation = quaternion.identity,
+                    Scale = 1f
+                });
+                //Sign the networkID
+                commandBuffer.SetComponent(player, new GhostOwner()
+                {
+                    NetworkId = id.ValueRO.Value
+                });
+                //Link to connection
+                commandBuffer.AppendToBuffer(entity, new LinkedEntityGroup()
+                {
+                    Value = player
+                });
+            }
+           // SendMessageRpc("Client connected with id = " + id.ValueRO.Value, ConnectionManager.serverWorld);
         }
         commandBuffer.Playback(EntityManager);
         commandBuffer.Dispose();
