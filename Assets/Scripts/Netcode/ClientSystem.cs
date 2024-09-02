@@ -36,11 +36,11 @@ public partial class ClientSystem : SystemBase
         // Use the new Input System
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            SendMessageRpc("Hello", ConnectionManager.clientWorld);
+            SendMessageRpc("Hello", ConnectionManager.ClientWorld);
         }
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            SpawnUnitRpc(ConnectionManager.clientWorld);
+            SpawnUnitRpc(ConnectionManager.ClientWorld);
         }
 
         commandBuffer.Playback(EntityManager);
