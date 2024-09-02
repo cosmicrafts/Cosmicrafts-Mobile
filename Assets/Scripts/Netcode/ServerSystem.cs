@@ -72,28 +72,7 @@ public partial class ServerSystem : SystemBase
         foreach (var (id, entity) in SystemAPI.Query<RefRO<NetworkId>>().WithNone<InitializedClient>().WithEntityAccess())
         {
             commandBuffer.AddComponent<InitializedClient>(entity);
-            PrefabsData prefabManager = SystemAPI.GetSingleton<PrefabsData>();
-            if (prefabManager.player != null)
-            {
-                Entity player = commandBuffer.Instantiate(prefabManager.player);
-                commandBuffer.SetComponent(player, new LocalTransform()
-                {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f)),
-                    Rotation = quaternion.identity,
-                    Scale = 1f
-                });
-                //Sign the networkID
-                commandBuffer.SetComponent(player, new GhostOwner()
-                {
-                    NetworkId = id.ValueRO.Value
-                });
-                //Link to connection
-                commandBuffer.AppendToBuffer(entity, new LinkedEntityGroup()
-                {
-                    Value = player
-                });
-            }
-           // SendMessageRpc("Client connected with id = " + id.ValueRO.Value, ConnectionManager.serverWorld);
+            SendMessageRpc("Client connected with id = " + id.ValueRO.Value, ConnectionManager.ServerWorld);
         }
         commandBuffer.Playback(EntityManager);
         commandBuffer.Dispose();
