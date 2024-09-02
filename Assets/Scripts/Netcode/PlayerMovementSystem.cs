@@ -4,8 +4,11 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Burst;
 using Unity.Mathematics;
+using Unity.NetCode;
 
 [BurstCompile]
+// Use built-in Prediction system for internet
+[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct PlayerMovementSystem : ISystem
 {
     [BurstCompile]

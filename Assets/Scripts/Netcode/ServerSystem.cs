@@ -29,6 +29,8 @@ public partial class ServerSystem : SystemBase
     {
         _clients.Update(this);
         var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
+
+        
         foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<ClientMessageRpcCommand>>().WithEntityAccess())
         {
             Debug.Log(command.ValueRO.message + " from client index " + request.ValueRO.SourceConnection.Index + " version " + request.ValueRO.SourceConnection.Version);
