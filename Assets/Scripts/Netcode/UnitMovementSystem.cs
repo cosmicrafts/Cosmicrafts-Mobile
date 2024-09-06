@@ -18,7 +18,8 @@ public partial struct UnitMovementSystem : ISystem
 
         foreach (var (transform, unit, team) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<UnitComponent>, RefRO<TeamComponent>>())
         {
-            float3 targetPosition = team.ValueRO.TeamId == 0 ? new float3(20f, 0f, 0f) : new float3(-20f, 0f, 0f);
+            // Determine target position based on team
+            float3 targetPosition = team.ValueRO.TeamId == 1 ? new float3(20f, 0f, 0f) : new float3(-20f, 0f, 0f);
             float3 direction = math.normalize(targetPosition - transform.ValueRW.Position);
             transform.ValueRW.Position += direction * unit.ValueRO.Speed * deltaTime;
         }

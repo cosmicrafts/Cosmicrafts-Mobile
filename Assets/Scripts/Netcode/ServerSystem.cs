@@ -7,37 +7,42 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+public struct InitializedClient : IComponentData { }
+
 public struct ServerMessageRpcCommand : IRpcCommand
 {
     public FixedString64Bytes message;
 }
 
-public struct InitializedClient : IComponentData
+public struct SpawnUnitRpcCommand : IRpcCommand
 {
-
+    public int TeamId;
+    public float3 SpawnPosition;
 }
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 public partial class ServerSystem : SystemBase
 {
     private ComponentLookup<NetworkId> _clients;
+
     protected override void OnCreate()
     {
         _clients = GetComponentLookup<NetworkId>(true);
     }
+
     protected override void OnUpdate()
     {
         _clients.Update(this);
         var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-        
+        // Handle Client Messages
         foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<ClientMessageRpcCommand>>().WithEntityAccess())
         {
-            Debug.Log(command.ValueRO.message + " from client index " + request.ValueRO.SourceConnection.Index + " version " + request.ValueRO.SourceConnection.Version);
+            Debug.Log(command.ValueRO.message + " from client index " + request.ValueRO.SourceConnection.Index);
             commandBuffer.DestroyEntity(entity);
         }
 
-        //Spawn Unit
+        // Handle Unit Spawning Request
         foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<SpawnUnitRpcCommand>>().WithEntityAccess())
         {
             PrefabsData prefabs;
@@ -46,77 +51,43 @@ public partial class ServerSystem : SystemBase
                 Entity unit = commandBuffer.Instantiate(prefabs.unit);
                 commandBuffer.SetComponent(unit, new LocalTransform()
                 {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 10f, UnityEngine.Random.Range(-10f, 10f) ),
+                    Position = command.ValueRO.SpawnPosition,
                     Rotation = quaternion.identity,
                     Scale = 1f
-                    
                 });
 
-                //set the owner
+                // Assign ownership to the player who requested the spawn
                 var networkId = _clients[request.ValueRO.SourceConnection];
                 commandBuffer.SetComponent(unit, new GhostOwner()
                 {
                     NetworkId = networkId.Value
                 });
 
-                commandBuffer.AppendToBuffer(request.ValueRO.SourceConnection, new LinkedEntityGroup()
-                {
-                    Value = unit
-                });
-
+                // Add the unit to the player's entity group
+                commandBuffer.AppendToBuffer(request.ValueRO.SourceConnection, new LinkedEntityGroup() { Value = unit });
                 commandBuffer.DestroyEntity(entity);
             }
         }
 
-        //Spawn Player
+        // Handle Player Spawning
         foreach (var (id, entity) in SystemAPI.Query<RefRO<NetworkId>>().WithNone<InitializedClient>().WithEntityAccess())
         {
             commandBuffer.AddComponent<InitializedClient>(entity);
-            PrefabsData prefabManager = SystemAPI.GetSingleton<PrefabsData>();
-            if (prefabManager.player != null)
-            {
-                Entity player = commandBuffer.Instantiate(prefabManager.player);
-                commandBuffer.SetComponent(player, new LocalTransform()
-                {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f)),
-                    Rotation = quaternion.identity,
-                    Scale = 1f
-                });
-                //Sign the networkID
-                commandBuffer.SetComponent(player, new GhostOwner()
-                {
-                    NetworkId = id.ValueRO.Value
-                });
-                //Link to connection
-                commandBuffer.AppendToBuffer(entity, new LinkedEntityGroup()
-                {
-                    Value = player
-                });
-            }
-           // SendMessageRpc("Client connected with id = " + id.ValueRO.Value, ConnectionManager.serverWorld);
+            SendMessageRpc("Client connected with id = " + id.ValueRO.Value, ConnectionManager.serverWorld);
         }
+
         commandBuffer.Playback(EntityManager);
         commandBuffer.Dispose();
     }
 
     public void SendMessageRpc(string text, World world, Entity target = default)
     {
-        if (world == null || world.IsCreated == false)
-        {
-            return;
-        }
+        if (world == null || !world.IsCreated) return;
         var entity = world.EntityManager.CreateEntity(typeof(SendRpcCommandRequest), typeof(ServerMessageRpcCommand));
-        world.EntityManager.SetComponentData(entity, new ServerMessageRpcCommand()
-        {
-            message = text
-        });
+        world.EntityManager.SetComponentData(entity, new ServerMessageRpcCommand { message = text });
         if (target != Entity.Null)
         {
-            world.EntityManager.SetComponentData(entity, new SendRpcCommandRequest()
-            {
-                TargetConnection = target
-            });
+            world.EntityManager.SetComponentData(entity, new SendRpcCommandRequest() { TargetConnection = target });
         }
     }
-
 }

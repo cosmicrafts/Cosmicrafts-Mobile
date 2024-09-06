@@ -11,6 +11,7 @@ public struct PlayerData : IComponentData
     public float speed;
 }
 
+
 public class PlayerBaker : Baker<Player>
 {
     public override void Bake(Player authoring)
