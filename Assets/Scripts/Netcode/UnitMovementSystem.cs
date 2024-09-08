@@ -16,20 +16,17 @@ public partial struct UnitMovementSystem : ISystem
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
 
-        // Move each unit towards the target position
-        foreach (var (transform, targetPosition, unitData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TargetPosition>, RefRO<UnitData>>())
+        foreach (var (transform, targetPosition, unitData, unitState) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TargetPosition>, RefRO<UnitData>, RefRW<UnitState>>())
         {
-            // Calculate direction towards the target
-            float3 direction = math.normalize(targetPosition.ValueRO.Value - transform.ValueRW.Position);
-
-            // If direction is not zero, move the unit
-            if (math.length(direction) > 0.01f)
+            // Only move if the unit is not attacking
+            if (!unitState.ValueRW.IsAttacking)
             {
-                float3 movement = direction * unitData.ValueRO.speed * deltaTime;
-                transform.ValueRW.Position += movement;
-
-                // For debugging, show the movement
-                //Debug.Log($"Moving unit towards base at {targetPosition.ValueRO.Value}. New Position: {transform.ValueRW.Position}");
+                float3 direction = math.normalize(targetPosition.ValueRO.Value - transform.ValueRW.Position);
+                if (math.length(direction) > 0.01f)
+                {
+                    float3 movement = direction * unitData.ValueRO.speed * deltaTime;
+                    transform.ValueRW.Position += movement;
+                }
             }
         }
     }

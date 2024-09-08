@@ -24,6 +24,29 @@ public struct TargetPosition : IComponentData
     public float3 Value;
 }
 
+public struct CombatData : IComponentData
+{
+    public float AttackRange;
+    public float AttackDamage;
+    public float AttackCooldown;
+    public float LastAttackTime;
+    public float HitPoints;
+}
+
+public struct ProjectileData : IComponentData
+{
+    public float Damage;
+    public float Speed;
+    public Entity Target;
+}
+
+public struct UnitState : IComponentData
+{
+    public bool IsMoving;
+    public bool IsAttacking;
+}
+
+
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 public partial class ServerSystem : SystemBase
 {

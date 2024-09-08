@@ -51,6 +51,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
+  attackRange: 5
+  attackDamage: 10
+  hitPoints: 1000
 --- !u!33 &6453933388663811473
 MeshFilter:
   m_ObjectHideFlags: 0
