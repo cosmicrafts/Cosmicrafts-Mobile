@@ -7,7 +7,6 @@ using Unity.Mathematics;
 using Unity.NetCode;
 
 [BurstCompile]
-// Use built-in Prediction system for internet
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct PlayerMovementSystem : ISystem
 {
