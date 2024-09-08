@@ -6,6 +6,7 @@ using Unity.Transforms;
 using Unity.Jobs;
 using Unity.NetCode;
 
+[BurstCompile]
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial class FindTargetPlayerSystem : SystemBase
 {

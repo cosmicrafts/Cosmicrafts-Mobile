@@ -26,11 +26,12 @@ public struct TargetPosition : IComponentData
 
 public struct CombatData : IComponentData
 {
-    public float AttackRange;
-    public float AttackDamage;
-    public float AttackCooldown;
-    public float LastAttackTime;
-    public float HitPoints;
+    public float AttackRange;      // Attack range (closer range)
+    public float DetectionRange;   // Detection range (larger range)
+    public float AttackCooldown;   // Cooldown between attacks
+    public float LastAttackTime;   // Timestamp of the last attack
+    public float HitPoints;        // Unit hit points
+    public float AttackDamage;     // Damage dealt by unit
 }
 
 public struct ProjectileData : IComponentData
@@ -44,6 +45,7 @@ public struct UnitState : IComponentData
 {
     public bool IsMoving;
     public bool IsAttacking;
+    public bool IsInGhostMode;
 }
 
 
