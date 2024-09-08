@@ -86,9 +86,12 @@ public partial class ServerSystem : SystemBase
             if (SystemAPI.TryGetSingleton<PrefabsData>(out prefabs) && prefabs.unit != null)
             {
                 Entity unit = commandBuffer.Instantiate(prefabs.unit);
+
+                // Get the clicked position from the command
+                float3 clickedPosition = command.ValueRO.position;
                 commandBuffer.SetComponent(unit, new LocalTransform()
                 {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 10f, UnityEngine.Random.Range(-10f, 10f)),
+                    Position = clickedPosition,
                     Rotation = quaternion.identity,
                     Scale = 1f
                 });
