@@ -15,17 +15,16 @@ public partial class FindTargetPlayerSystem : SystemBase
                                          ComponentType.ReadOnly<Team>(),
                                          ComponentType.ReadOnly<LocalTransform>());
         
-        var players = playerQuery.ToComponentDataArray<PlayerData>(Allocator.TempJob);
         var playerTeams = playerQuery.ToComponentDataArray<Team>(Allocator.TempJob);
         var playerTransforms = playerQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
 
-        // Schedule a job that finds the target player for each unit
+        // Schedule a job that finds the target player for each unit (sequentially)
         JobHandle jobHandle = Entities
             .WithAll<UnitData, Team>()
             .ForEach((ref TargetPosition targetPosition, in Team unitTeam) => 
             {
                 // Find the opposing team's player
-                for (int i = 0; i < players.Length; i++)
+                for (int i = 0; i < playerTeams.Length; i++)
                 {
                     if (playerTeams[i].Value != unitTeam.Value) 
                     {
@@ -33,12 +32,12 @@ public partial class FindTargetPlayerSystem : SystemBase
                         break;
                     }
                 }
-            }).ScheduleParallel(Dependency);
+            }).Schedule(Dependency); // Use `Schedule()` for sequential processing
 
-        // Ensure the job completes before disposing of the native arrays
+        Dependency = jobHandle;
         jobHandle.Complete();
 
-        players.Dispose();
+        // Dispose of arrays after job completion
         playerTeams.Dispose();
         playerTransforms.Dispose();
     }

@@ -2,7 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;  // For debugging with Debug.Log
+using UnityEngine;
 
 [BurstCompile]
 public partial struct UnitMovementSystem : ISystem
@@ -19,7 +19,7 @@ public partial struct UnitMovementSystem : ISystem
         // Move each unit towards the target position
         foreach (var (transform, targetPosition, unitData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TargetPosition>, RefRO<UnitData>>())
         {
-            // Calculate the direction towards the target
+            // Calculate direction towards the target
             float3 direction = math.normalize(targetPosition.ValueRO.Value - transform.ValueRW.Position);
 
             // If direction is not zero, move the unit
@@ -29,7 +29,7 @@ public partial struct UnitMovementSystem : ISystem
                 transform.ValueRW.Position += movement;
 
                 // For debugging, show the movement
-                Debug.Log($"Moving unit towards base at {targetPosition.ValueRO.Value}. New Position: {transform.ValueRW.Position}");
+                //Debug.Log($"Moving unit towards base at {targetPosition.ValueRO.Value}. New Position: {transform.ValueRW.Position}");
             }
         }
     }
