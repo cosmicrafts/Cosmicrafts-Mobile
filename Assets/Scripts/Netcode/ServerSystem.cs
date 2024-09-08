@@ -21,6 +21,10 @@ public struct Team : IComponentData
     public int Value;
 }
 
+public struct TargetPosition : IComponentData
+{
+    public float3 Value;
+}
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 public partial class ServerSystem : SystemBase
@@ -43,79 +47,88 @@ public partial class ServerSystem : SystemBase
         }
 
         // Spawn Player and Assign Team
-        foreach (var (id, entity) in SystemAPI.Query<RefRO<NetworkId>>().WithNone<InitializedClient>().WithEntityAccess())
+foreach (var (id, entity) in SystemAPI.Query<RefRO<NetworkId>>().WithNone<InitializedClient>().WithEntityAccess())
+{
+    commandBuffer.AddComponent<InitializedClient>(entity);
+
+    // Assign random team (e.g., 0 or 1 for two teams)
+    int assignedTeam = UnityEngine.Random.Range(0, 2);
+    commandBuffer.AddComponent(entity, new Team { Value = assignedTeam });
+
+    PrefabsData prefabManager = SystemAPI.GetSingleton<PrefabsData>();
+    if (prefabManager.player != null)
+    {
+        Entity player = commandBuffer.Instantiate(prefabManager.player);
+        commandBuffer.SetComponent(player, new LocalTransform()
         {
-            commandBuffer.AddComponent<InitializedClient>(entity);
+            Position = new float3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f)),
+            Rotation = quaternion.identity,
+            Scale = 1f
+        });
 
-            // Assign random team (e.g., 0 or 1 for two teams)
-            int assignedTeam = UnityEngine.Random.Range(0, 2);
-            commandBuffer.AddComponent(entity, new Team { Value = assignedTeam });
+        // Set target position based on the assigned team
+        float3 basePosition = assignedTeam == 0 ? new float3(10f, 0f, 10f) : new float3(-10f, 0f, -10f);
+        commandBuffer.AddComponent(player, new TargetPosition { Value = basePosition });
 
-            PrefabsData prefabManager = SystemAPI.GetSingleton<PrefabsData>();
-            if (prefabManager.player != null)
-            {
-                Entity player = commandBuffer.Instantiate(prefabManager.player);
-                commandBuffer.SetComponent(player, new LocalTransform()
-                {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f)),
-                    Rotation = quaternion.identity,
-                    Scale = 1f
-                });
+        // Assign the same team to the player
+        commandBuffer.AddComponent(player, new Team { Value = assignedTeam });
 
-                // Assign the same team to the player
-                commandBuffer.AddComponent(player, new Team { Value = assignedTeam });
-
-                // Assign the network ID
-                commandBuffer.SetComponent(player, new GhostOwner()
-                {
-                    NetworkId = id.ValueRO.Value
-                });
-
-                // Link to connection
-                commandBuffer.AppendToBuffer(entity, new LinkedEntityGroup()
-                {
-                    Value = player
-                });
-            }
-        }
-
-        // Spawn Units with Team Assignment
-        foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<SpawnUnitRpcCommand>>().WithEntityAccess())
+        // Assign the network ID
+        commandBuffer.SetComponent(player, new GhostOwner()
         {
-            PrefabsData prefabs;
-            if (SystemAPI.TryGetSingleton<PrefabsData>(out prefabs) && prefabs.unit != null)
-            {
-                Entity unit = commandBuffer.Instantiate(prefabs.unit);
+            NetworkId = id.ValueRO.Value
+        });
 
-                // Get the clicked position from the command
-                float3 clickedPosition = command.ValueRO.position;
-                commandBuffer.SetComponent(unit, new LocalTransform()
-                {
-                    Position = clickedPosition,
-                    Rotation = quaternion.identity,
-                    Scale = 1f
-                });
+        // Link to connection
+        commandBuffer.AppendToBuffer(entity, new LinkedEntityGroup()
+        {
+            Value = player
+        });
+    }
+}
 
-                // Get the team from the connection and assign to the unit using SystemAPI
-                var networkId = _clients[request.ValueRO.SourceConnection];
-                var connectionTeam = SystemAPI.GetComponent<Team>(request.ValueRO.SourceConnection);
-                commandBuffer.AddComponent(unit, new Team { Value = connectionTeam.Value });
+// Spawn Units with Team Assignment
+foreach (var (request, command, entity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, RefRO<SpawnUnitRpcCommand>>().WithEntityAccess())
+{
+    PrefabsData prefabs;
+    if (SystemAPI.TryGetSingleton<PrefabsData>(out prefabs) && prefabs.unit != null)
+    {
+        Entity unit = commandBuffer.Instantiate(prefabs.unit);
 
-                // Assign the owner
-                commandBuffer.SetComponent(unit, new GhostOwner()
-                {
-                    NetworkId = networkId.Value
-                });
+        // Get the clicked position from the command
+        float3 clickedPosition = command.ValueRO.position;
+        commandBuffer.SetComponent(unit, new LocalTransform()
+        {
+            Position = clickedPosition,
+            Rotation = quaternion.identity,
+            Scale = 1f
+        });
 
-                // Link unit to connection
-                commandBuffer.AppendToBuffer(request.ValueRO.SourceConnection, new LinkedEntityGroup()
-                {
-                    Value = unit
-                });
+        // Get the team from the connection and assign to the unit
+        var networkId = _clients[request.ValueRO.SourceConnection];
+        var connectionTeam = SystemAPI.GetComponent<Team>(request.ValueRO.SourceConnection);
+        commandBuffer.AddComponent(unit, new Team { Value = connectionTeam.Value });
 
-                commandBuffer.DestroyEntity(entity);
-            }
-        }
+        // Set target position for unit movement based on the team
+        float3 basePosition = connectionTeam.Value == 0 ? new float3(10f, 0f, 10f) : new float3(-10f, 0f, -10f);
+        commandBuffer.AddComponent(unit, new TargetPosition { Value = basePosition });
+
+        // Assign the owner
+        commandBuffer.SetComponent(unit, new GhostOwner()
+        {
+            NetworkId = networkId.Value
+        });
+
+        // Link unit to connection
+        commandBuffer.AppendToBuffer(request.ValueRO.SourceConnection, new LinkedEntityGroup()
+        {
+            Value = unit
+        });
+
+        commandBuffer.DestroyEntity(entity);
+    }
+}
+
         commandBuffer.Playback(EntityManager);
         commandBuffer.Dispose();
     }
