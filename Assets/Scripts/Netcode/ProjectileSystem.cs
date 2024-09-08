@@ -3,15 +3,19 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
+using Unity.NetCode;
 
 [BurstCompile]
+[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct ProjectileSystem : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<ProjectileData>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
@@ -50,6 +54,7 @@ public partial struct ProjectileSystem : ISystem
         commandBuffer.Dispose();
     }
 
+    [BurstCompile]
     private void ApplyDamageToTarget(ref SystemState state, ref EntityCommandBuffer commandBuffer, Entity target, float damage)
     {
         if (SystemAPI.HasComponent<CombatData>(target))

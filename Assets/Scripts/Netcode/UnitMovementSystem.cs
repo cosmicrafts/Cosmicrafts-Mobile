@@ -3,15 +3,19 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using Unity.NetCode;
 
 [BurstCompile]
+[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct UnitMovementSystem : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<UnitData>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;

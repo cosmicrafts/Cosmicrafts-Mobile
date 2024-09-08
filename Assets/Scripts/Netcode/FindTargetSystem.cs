@@ -4,10 +4,12 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Jobs;
+using Unity.NetCode;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial class FindTargetPlayerSystem : SystemBase
 {
+    [BurstCompile]
     protected override void OnUpdate()
     {
         // Get player data and transforms

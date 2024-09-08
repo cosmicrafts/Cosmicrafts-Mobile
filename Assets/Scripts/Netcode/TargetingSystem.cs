@@ -3,15 +3,19 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
+using Unity.NetCode;
 
 [BurstCompile]
+[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct TargetingSystem : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<CombatData>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var time = SystemAPI.Time.ElapsedTime;
@@ -59,6 +63,7 @@ public partial struct TargetingSystem : ISystem
     }
 
     // SpawnProjectile function that launches a projectile towards the target entity
+    [BurstCompile]
     private void SpawnProjectile(ref SystemState state, ref EntityCommandBuffer commandBuffer, float3 startPosition, Entity targetEntity, float damage)
     {
         var projectileEntity = commandBuffer.CreateEntity();
