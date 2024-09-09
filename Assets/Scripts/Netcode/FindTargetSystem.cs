@@ -13,40 +13,29 @@ public partial class FindTargetPlayerSystem : SystemBase
     [BurstCompile]
     protected override void OnUpdate()
     {
-        // Get player data and transforms using ComponentLookup for direct access
+        // Get the lookup tables for Team and LocalTransform
         var teamLookup = GetComponentLookup<Team>(true);
         var transformLookup = GetComponentLookup<LocalTransform>(true);
 
-        // Get player entities and teams
+        // Get all player entities
         var playerQuery = GetEntityQuery(ComponentType.ReadOnly<PlayerData>(), 
                                          ComponentType.ReadOnly<Team>(),
                                          ComponentType.ReadOnly<LocalTransform>());
 
         var playerEntities = playerQuery.ToEntityArray(Allocator.TempJob);
 
-        // Schedule a job that finds the target player for each unit (sequentially)
+        // Cache each player's position into PlayerPosition component
         JobHandle jobHandle = Entities
-            .WithAll<UnitData, Team>()
-            .ForEach((ref TargetPosition targetPosition, in Team unitTeam) => 
+            .WithAll<PlayerData>()
+            .ForEach((Entity playerEntity, ref PlayerPosition playerPosition) => 
             {
-                // Iterate through the players to find an opposing team member
-                for (int i = 0; i < playerEntities.Length; i++)
-                {
-                    var playerEntity = playerEntities[i];
-                    var playerTeam = teamLookup[playerEntity];
-
-                    // Find an opposing player
-                    if (playerTeam.Value != unitTeam.Value) 
-                    {
-                        targetPosition.Value = transformLookup[playerEntity].Position;
-                        break; // Stop after finding the first opposing player
-                    }
-                }
-            }).Schedule(Dependency); // Schedule job for parallel execution
+                // Store the player's current position in PlayerPosition
+                playerPosition.Value = transformLookup[playerEntity].Position;
+            }).ScheduleParallel(Dependency); // Parallel job execution for efficiency
 
         Dependency = jobHandle;
 
-        // Dispose of arrays after job completion
+        // Dispose of the player entities array
         playerEntities.Dispose(jobHandle);
     }
 }

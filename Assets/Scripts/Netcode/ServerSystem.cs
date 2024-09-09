@@ -48,6 +48,11 @@ public struct UnitState : IComponentData
     public bool IsInGhostMode;
 }
 
+public struct PlayerPosition : IComponentData
+{
+    public float3 Value;
+}
+
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 public partial class ServerSystem : SystemBase

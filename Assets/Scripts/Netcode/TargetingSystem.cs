@@ -1,87 +1,186 @@
 using Unity.Burst;
+using Unity.Burst.Intrinsics;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Unity.Collections;
+using Unity.Jobs;
 using Unity.NetCode;
+using UnityEngine; // Needed for Debug.Log
 
 [BurstCompile]
-[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct TargetingSystem : ISystem
 {
-    [BurstCompile]
+    private ComponentTypeHandle<LocalTransform> unitTransformType;
+    private ComponentTypeHandle<CombatData> unitCombatType;
+    private ComponentTypeHandle<Team> unitTeamType;
+    private ComponentTypeHandle<UnitState> unitStateType;
+    private EntityTypeHandle entityTypeHandle;
+
+    // Add these for enemies as well
+    private ComponentTypeHandle<LocalTransform> enemyTransformType;
+    private ComponentTypeHandle<Team> enemyTeamType;
+
+    private EntityQuery unitQuery;
+    private EntityQuery enemyQuery;
+
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<CombatData>();
+        // Initialize component handles in OnCreate
+        unitTransformType = state.GetComponentTypeHandle<LocalTransform>(true);
+        unitCombatType = state.GetComponentTypeHandle<CombatData>(true);
+        unitTeamType = state.GetComponentTypeHandle<Team>(true);
+        unitStateType = state.GetComponentTypeHandle<UnitState>(false);
+        entityTypeHandle = state.GetEntityTypeHandle();
+
+        // Initialize enemy component handles in OnCreate
+        enemyTransformType = state.GetComponentTypeHandle<LocalTransform>(true);
+        enemyTeamType = state.GetComponentTypeHandle<Team>(true);
+
+        // Create queries in OnCreate
+        unitQuery = SystemAPI.QueryBuilder()
+                             .WithAll<LocalTransform, CombatData, Team, UnitState>()
+                             .Build();
+
+        enemyQuery = SystemAPI.QueryBuilder()
+                             .WithAll<LocalTransform, Team>()
+                             .Build();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        // Update the component type handles in OnUpdate
+        unitTransformType.Update(ref state);
+        unitCombatType.Update(ref state);
+        unitTeamType.Update(ref state);
+        unitStateType.Update(ref state);
+        entityTypeHandle.Update(ref state);
+
+        // Update the enemy component type handles
+        enemyTransformType.Update(ref state);
+        enemyTeamType.Update(ref state);
+
+        // Get the current time
         var time = SystemAPI.Time.ElapsedTime;
 
-        // Create an EntityCommandBuffer to queue up structural changes
-        var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
+        var unitChunks = unitQuery.ToArchetypeChunkArray(Allocator.TempJob);
+        var enemyChunks = enemyQuery.ToArchetypeChunkArray(Allocator.TempJob);
 
-        // Iterate over units or bases that have CombatData and belong to a team
-        foreach (var (transform, combat, team, unitState, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<CombatData>, RefRO<Team>, RefRW<UnitState>>().WithEntityAccess())
+        var commandBuffer = new EntityCommandBuffer(Allocator.TempJob);
+
+        // Setup the job
+        var job = new TargetingJob
         {
-            // Find enemy units or bases in range
-            foreach (var (enemyTransform, enemyTeam, enemyEntity) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<Team>>().WithEntityAccess())
-            {
-                // Skip units on the same team
-                if (team.ValueRO.Value == enemyTeam.ValueRO.Value)
-                    continue;
+            Time = (float)time,
+            UnitTransformType = unitTransformType,
+            UnitCombatType = unitCombatType,
+            UnitTeamType = unitTeamType,
+            UnitStateType = unitStateType,
+            EntityTypeHandle = entityTypeHandle,
+            EnemyChunks = enemyChunks,
+            EnemyTransformType = enemyTransformType, // Use pre-initialized handle
+            EnemyTeamType = enemyTeamType,           // Use pre-initialized handle
+            CommandBuffer = commandBuffer.AsParallelWriter(),
+            DebugEntityManager = state.EntityManager // Pass EntityManager for debug logs
+        };
 
-                // Check if the enemy is within attack range
-                float distance = math.distance(transform.ValueRW.Position, enemyTransform.ValueRO.Position);
-                if (distance <= combat.ValueRW.AttackRange && (time - combat.ValueRW.LastAttackTime) >= combat.ValueRW.AttackCooldown)
-                {
-                    // Log attack start
-                    UnityEngine.Debug.Log($"Unit {entity} attacking target {enemyEntity}");
+        // Schedule the job in parallel
+        var handle = job.ScheduleParallel(unitQuery, state.Dependency);
+        state.Dependency = handle;
 
-                    // Spawn the projectile targeting the enemy entity
-                    SpawnProjectile(ref state, ref commandBuffer, transform.ValueRW.Position, enemyEntity, combat.ValueRW.AttackDamage);
-
-                    // Update last attack time
-                    combat.ValueRW.LastAttackTime = (float)time;
-
-                    // Set unit to attacking state
-                    unitState.ValueRW.IsAttacking = true;
-
-                    // Log attack finish
-                    UnityEngine.Debug.Log($"Projectile spawned from {entity} targeting {enemyEntity}");
-
-                    break; // Stop after attacking one enemy in range
-                }
-            }
-        }
-
-        // Apply the structural changes after the iteration is complete
+        state.Dependency.Complete();
         commandBuffer.Playback(state.EntityManager);
         commandBuffer.Dispose();
+
+        unitChunks.Dispose();
+        enemyChunks.Dispose();
     }
 
-    // SpawnProjectile function that launches a projectile towards the target entity
-    [BurstCompile]
-    private void SpawnProjectile(ref SystemState state, ref EntityCommandBuffer commandBuffer, float3 startPosition, Entity targetEntity, float damage)
+[BurstCompile]
+struct TargetingJob : IJobChunk
+{
+    public float Time;
+    [ReadOnly] public ComponentTypeHandle<LocalTransform> UnitTransformType;
+    [ReadOnly] public ComponentTypeHandle<CombatData> UnitCombatType;
+    [ReadOnly] public ComponentTypeHandle<Team> UnitTeamType;
+    public ComponentTypeHandle<UnitState> UnitStateType;
+    [ReadOnly] public EntityTypeHandle EntityTypeHandle;
+
+    [ReadOnly] public NativeArray<ArchetypeChunk> EnemyChunks;
+    [ReadOnly] public ComponentTypeHandle<LocalTransform> EnemyTransformType;
+    [ReadOnly] public ComponentTypeHandle<Team> EnemyTeamType;
+
+    public EntityCommandBuffer.ParallelWriter CommandBuffer;
+
+    [NativeDisableParallelForRestriction]
+    [ReadOnly] public EntityManager DebugEntityManager;
+
+    public void Execute(in ArchetypeChunk chunk, int chunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
     {
-        var projectileEntity = commandBuffer.CreateEntity();
+        var unitTransforms = chunk.GetNativeArray(ref UnitTransformType);
+        var unitCombats = chunk.GetNativeArray(ref UnitCombatType);
+        var unitTeams = chunk.GetNativeArray(ref UnitTeamType);
+        var unitStates = chunk.GetNativeArray(ref UnitStateType);
+        var entities = chunk.GetNativeArray(EntityTypeHandle);
 
-        // Set projectile data with the target entity reference
-        commandBuffer.AddComponent(projectileEntity, new ProjectileData
+        for (int i = 0; i < chunk.Count; i++)
         {
-            Damage = damage,
-            Speed = 10f,  // Example speed
-            Target = targetEntity // Use the enemy entity as the target
-        });
+            if (useEnabledMask && !BitmaskHelper.IsSet(chunkEnabledMask, i)) 
+                continue;
 
-        // Set the projectile's starting position and orientation
-        commandBuffer.AddComponent(projectileEntity, new LocalTransform
+            var unitEntity = entities[i];
+            var unitCombat = unitCombats[i];
+            var unitState = unitStates[i];
+            float3 targetPosition = unitTransforms[i].Position;
+            bool hasTarget = false;
+
+            foreach (var enemyChunk in EnemyChunks)
+            {
+                var enemyTransforms = enemyChunk.GetNativeArray(ref EnemyTransformType);
+                var enemyTeams = enemyChunk.GetNativeArray(ref EnemyTeamType);
+
+                for (int j = 0; j < enemyChunk.Count; j++)
+                {
+                    if (unitTeams[i].Value == enemyTeams[j].Value)
+                        continue;
+
+                    float distance = math.distance(unitTransforms[i].Position, enemyTransforms[j].Position);
+                    if (distance <= unitCombat.DetectionRange)
+                    {
+                        hasTarget = true;
+                        targetPosition = enemyTransforms[j].Position;
+
+                        // Ensure ProjectileData is only added if it doesn't already exist
+                        if (!DebugEntityManager.HasComponent<ProjectileData>(unitEntity))
+                        {
+                            CommandBuffer.AddComponent(chunkIndex, unitEntity, new ProjectileData
+                            {
+                                Damage = unitCombat.AttackDamage,
+                                Speed = 10f,
+                                Target = unitEntity
+                            });
+                        }
+
+                        unitState.IsAttacking = true;
+                        unitStates[i] = unitState;
+                        CommandBuffer.SetComponent(chunkIndex, unitEntity, new TargetPosition { Value = targetPosition });
+                        break;
+                    }
+                }
+
+                if (hasTarget) break;
+            }
+        }
+    }
+}
+    // Helper for bitmask checking
+    public static class BitmaskHelper
+    {
+        public static bool IsSet(v128 mask, int index)
         {
-            Position = startPosition,
-            Rotation = quaternion.identity,
-            Scale = 1f
-        });
+            // Assuming 128-bit mask for 128 entities, check the bit corresponding to the index
+            return (mask.SInt0 & (1 << index)) != 0;
+        }
     }
 }
