@@ -13,35 +13,40 @@ public partial class FindTargetPlayerSystem : SystemBase
     [BurstCompile]
     protected override void OnUpdate()
     {
-        // Get player data and transforms
+        // Get player data and transforms using ComponentLookup for direct access
+        var teamLookup = GetComponentLookup<Team>(true);
+        var transformLookup = GetComponentLookup<LocalTransform>(true);
+
+        // Get player entities and teams
         var playerQuery = GetEntityQuery(ComponentType.ReadOnly<PlayerData>(), 
                                          ComponentType.ReadOnly<Team>(),
                                          ComponentType.ReadOnly<LocalTransform>());
-        
-        var playerTeams = playerQuery.ToComponentDataArray<Team>(Allocator.TempJob);
-        var playerTransforms = playerQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
+
+        var playerEntities = playerQuery.ToEntityArray(Allocator.TempJob);
 
         // Schedule a job that finds the target player for each unit (sequentially)
         JobHandle jobHandle = Entities
             .WithAll<UnitData, Team>()
             .ForEach((ref TargetPosition targetPosition, in Team unitTeam) => 
             {
-                // Find the opposing team's player
-                for (int i = 0; i < playerTeams.Length; i++)
+                // Iterate through the players to find an opposing team member
+                for (int i = 0; i < playerEntities.Length; i++)
                 {
-                    if (playerTeams[i].Value != unitTeam.Value) 
+                    var playerEntity = playerEntities[i];
+                    var playerTeam = teamLookup[playerEntity];
+
+                    // Find an opposing player
+                    if (playerTeam.Value != unitTeam.Value) 
                     {
-                        targetPosition.Value = playerTransforms[i].Position;
-                        break;
+                        targetPosition.Value = transformLookup[playerEntity].Position;
+                        break; // Stop after finding the first opposing player
                     }
                 }
-            }).Schedule(Dependency); // Use `Schedule()` for sequential processing
+            }).Schedule(Dependency); // Schedule job for parallel execution
 
         Dependency = jobHandle;
-        jobHandle.Complete();
 
         // Dispose of arrays after job completion
-        playerTeams.Dispose();
-        playerTransforms.Dispose();
+        playerEntities.Dispose(jobHandle);
     }
 }
