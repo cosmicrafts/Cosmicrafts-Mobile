@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,21 +14,37 @@ public class PlayerController : MonoBehaviour
     public float dashCooldown = 1f;
 
     [Header("Rotation Settings")]
-    public float rotationSpeed = 720f; // Adjust as needed
+    public float rotationSpeed = 720f;
 
     [Header("Shooting Settings")]
+    public List<Transform> shootPoints; // List of shoot points
     public GameObject bulletPrefab;
-    public Transform shootPoint;
     public float bulletSpeed = 20f;
+    public float shootingCooldown = 0.1f; // Cooldown for continuous shooting
+    public GameObject muzzleFlashPrefab; // Muzzle flash for shooting
+
+    [Header("Thrusters Settings")]
+    public List<GameObject> thrusters; // List of thrusters
+
+    [Header("Camera Zoom Settings")]
+    public float zoomSmoothSpeed = 5f;  // Smooth transition speed between zoom levels
+
+    // Predefined zoom levels
+    private readonly float[] zoomLevels = { 4f, 8f, 16f, 24f, 36f };
+    private int currentZoomIndex;  // The current zoom level index
 
     private Vector2 moveInput;
     private Vector2 smoothMoveVelocity;
     private Vector2 currentMoveSpeed;
     private Vector3 mouseWorldPosition;
+    private float zoomInput;
 
     private bool isDashing;
+    private bool isShooting;
+    private bool canMove = true; // Disable movement during dash
     private float dashTime;
     private float dashCooldownTimer;
+    private float shootingCooldownTimer;
 
     private Camera mainCamera;
     private Rigidbody2D rb;
@@ -47,10 +64,14 @@ public class PlayerController : MonoBehaviour
         controls.Dash.Dash.performed += ctx => OnDash();
 
         // Shooting
-        controls.Shoot.Shoot.performed += ctx => Shoot();
+        controls.Shoot.Shoot.performed += ctx => isShooting = true;
+        controls.Shoot.Shoot.canceled += ctx => isShooting = false; // Stop shooting when button is released
 
-        // Mouse Look (Pointer movement for rotation)
+        // Mouse Look
         controls.Look.Look.performed += ctx => mouseWorldPosition = GetMouseWorldPosition(ctx);
+
+        // Zoom
+        controls.Zoom.Zoom.performed += ctx => zoomInput = ctx.ReadValue<Vector2>().y;
     }
 
     private void OnEnable()
@@ -67,21 +88,23 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
+
+        // Initialize the zoom level to the closest matching level to the current orthographic size
+        currentZoomIndex = GetClosestZoomIndex(mainCamera.orthographicSize);
     }
 
     void Update()
     {
         HandleRotation();
         HandleDashTimer();
+        HandleShooting();
+        UpdateThrusters();
+        HandleCameraZoom(); // Handle zooming in/out
     }
 
     void FixedUpdate()
     {
-        if (isDashing)
-        {
-            rb.linearVelocity = transform.up * dashSpeed;
-        }
-        else
+        if (canMove)
         {
             MoveCharacter();
         }
@@ -91,6 +114,8 @@ public class PlayerController : MonoBehaviour
 
     void MoveCharacter()
     {
+        if (isDashing) return; // Disable movement during dash
+
         float speed = moveSpeed;
 
         Vector2 targetMoveSpeed = moveInput * speed;
@@ -119,6 +144,7 @@ public class PlayerController : MonoBehaviour
         rb.MoveRotation(targetAngle); // Ensure Rigidbody2D's rotation matches
     }
 
+    // Handle dash input and timing
     void OnDash()
     {
         if (!isDashing && dashCooldownTimer <= 0f)
@@ -126,6 +152,13 @@ public class PlayerController : MonoBehaviour
             isDashing = true;
             dashTime = dashDuration;
             dashCooldownTimer = dashCooldown;
+
+            // Move in the player's current facing direction (transform.up)
+            rb.linearVelocity = transform.up * dashSpeed;
+            canMove = false; // Disable movement during dash
+
+            // Activate thrusters during dash
+            ActivateThrusters(true);
         }
     }
 
@@ -137,6 +170,10 @@ public class PlayerController : MonoBehaviour
             if (dashTime <= 0f)
             {
                 isDashing = false;
+                canMove = true; // Re-enable movement after dash
+
+                // Deactivate thrusters after dash ends
+                ActivateThrusters(false);
             }
         }
 
@@ -146,16 +183,100 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Continuous shooting while holding the button
+    void HandleShooting()
+    {
+        if (isShooting && shootingCooldownTimer <= 0f)
+        {
+            Shoot();
+            shootingCooldownTimer = shootingCooldown;
+        }
+
+        if (shootingCooldownTimer > 0f)
+        {
+            shootingCooldownTimer -= Time.deltaTime;
+        }
+    }
+
+    // Shoot from all shoot points
     void Shoot()
     {
-        // Use player's current forward direction (transform.up) for shooting direction
-        Vector2 shootDirection = transform.up;
+        foreach (Transform shootPoint in shootPoints)
+        {
+            // Instantiate bullet at each shoot point
+            GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+            bulletRb.linearVelocity = shootPoint.up * bulletSpeed;
 
-        // Instantiate bullet and set its velocity toward where the player is currently facing
-        GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
-        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
-        bulletRb.linearVelocity = shootDirection * bulletSpeed;
+            // Show muzzle flash
+            if (muzzleFlashPrefab != null)
+            {
+                GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, shootPoint.position, shootPoint.rotation);
+                Destroy(muzzleFlash, 0.1f); // Destroy after a short duration
+            }
+        }
     }
+
+    // Update thrusters based on movement or dash
+    void UpdateThrusters()
+    {
+        bool isMovingOrDashing = (moveInput != Vector2.zero || isDashing);
+
+        foreach (GameObject thruster in thrusters)
+        {
+            thruster.SetActive(isMovingOrDashing); // Activate thrusters when moving or dashing
+        }
+    }
+
+    // Activate or deactivate thrusters
+    void ActivateThrusters(bool isActive)
+    {
+        foreach (GameObject thruster in thrusters)
+        {
+            thruster.SetActive(isActive);
+        }
+    }
+
+    // Handle camera zoom based on mouse scroll input
+    void HandleCameraZoom()
+{
+    // Detect if there's a scroll input
+    if (zoomInput > 0 && currentZoomIndex > 0)
+    {
+        // Zoom in, decrease the zoom index
+        currentZoomIndex--;
+    }
+    else if (zoomInput < 0 && currentZoomIndex < zoomLevels.Length - 1)
+    {
+        // Zoom out, increase the zoom index
+        currentZoomIndex++;
+    }
+
+    // Clear the zoom input after processing to prevent multiple zoom steps per frame
+    zoomInput = 0;
+
+    // Smoothly interpolate the camera's orthographic size to the target zoom level
+    float targetZoom = zoomLevels[currentZoomIndex];
+    mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, targetZoom, Time.deltaTime * zoomSmoothSpeed);
+}
+
+int GetClosestZoomIndex(float currentZoom)
+{
+    int closestIndex = 0;
+    float closestDifference = Mathf.Abs(currentZoom - zoomLevels[0]);
+
+    for (int i = 1; i < zoomLevels.Length; i++)
+    {
+        float difference = Mathf.Abs(currentZoom - zoomLevels[i]);
+        if (difference < closestDifference)
+        {
+            closestDifference = difference;
+            closestIndex = i;
+        }
+    }
+
+    return closestIndex;
+}
 
     void FireLaser()
     {

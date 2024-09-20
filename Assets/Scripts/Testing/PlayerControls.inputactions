@@ -9,7 +9,7 @@
                     "name": "Move action",
                     "type": "Value",
                     "id": "45ed2648-0845-4064-b60a-90d4254417ae",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -79,25 +79,36 @@
             "actions": [
                 {
                     "name": "Dash",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "9266d31e-d3ff-4b6a-b6f9-1679e5ae7f78",
-                    "expectedControlType": "",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "17357518-acd9-4a58-808c-5f429ee9fe98",
-                    "path": "<Keyboard>/backspace",
+                    "name": "2D Vector",
+                    "id": "606cd555-46b9-41b0-8cbc-56a7bbf9dfc6",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "144f5dec-7716-46d0-a9c1-7aeab1a9cb85",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -180,6 +191,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Zoom",
+            "id": "dabe159d-8e26-48ef-b685-8a3700782023",
+            "actions": [
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "dec66157-c1de-47e3-ab96-c7dd144fe071",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4ef4f766-820b-4835-895b-5c2b547c15b6",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
