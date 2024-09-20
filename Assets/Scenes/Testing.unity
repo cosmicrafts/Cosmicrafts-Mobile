@@ -273,8 +273,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   moveSmoothTime: 0.1
-  dashSpeed: 15
-  dashDuration: 0.2
+  dashSpeed: 25
+  dashDuration: 0.25
   dashCooldown: 0.1
   rotationSpeed: 720
   shootPoints:
@@ -396,7 +396,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 80c8348c1cba90740b126724521d3ae3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0418c81634a0b474f81e882bca906ea3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 1
@@ -677,7 +677,7 @@ MonoBehaviour:
   asteroidsPerChunk: 5
   asteroidLayer: 1
   noiseScale: 0.1
-  asteroidDensity: 0.5
+  asteroidDensity: 0.1
 --- !u!1 &1368574890
 GameObject:
   m_ObjectHideFlags: 0

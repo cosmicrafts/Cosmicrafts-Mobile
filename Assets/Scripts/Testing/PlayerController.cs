@@ -198,24 +198,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Shoot from all shoot points
-    void Shoot()
+// Shoot from all shoot points
+void Shoot()
+{
+    foreach (Transform shootPoint in shootPoints)
     {
-        foreach (Transform shootPoint in shootPoints)
-        {
-            // Instantiate bullet at each shoot point
-            GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
-            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
-            bulletRb.linearVelocity = shootPoint.up * bulletSpeed;
+        // Instantiate the bullet at each shoot point
+        GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+        bullet.tag = "Bullet"; // Set the bullet tag
+        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+        bulletRb.linearVelocity = shootPoint.up * bulletSpeed;
 
-            // Show muzzle flash
-            if (muzzleFlashPrefab != null)
-            {
-                GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, shootPoint.position, shootPoint.rotation);
-                Destroy(muzzleFlash, 0.1f); // Destroy after a short duration
-            }
+        // Show muzzle flash
+        if (muzzleFlashPrefab != null)
+        {
+            GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, shootPoint.position, shootPoint.rotation, shootPoint);
+            Destroy(muzzleFlash, 0.1f); // Destroy the muzzle flash after a short duration
         }
     }
+}
+
+
 
     // Update thrusters based on movement or dash
     void UpdateThrusters()
