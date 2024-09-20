@@ -6,6 +6,32 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+
+    [Header("Minimap Settings")]
+    public GameObject minimapSmallUI;
+    public GameObject minimapFullUI;
+    public GameObject fogOfWarMesh;
+    private bool isFullMapActive = false;
+
+    public Camera minimapCamera; // Secondary minimap camera
+    public RenderTexture minimapRenderTexture; // Render texture for minimap
+    public GameObject playerDot; // Green dot for player representation on minimap
+    public GameObject asteroidDotPrefab; // White dot prefab for asteroids on minimap
+    public RectTransform playerViewportFrame;
+
+    [Header("Minimap Fog of War")]
+    public GameObject fogOfWarMask;
+    private bool isMinimapFull = false; // Track whether the minimap is in full-screen mode
+    private List<GameObject> asteroidDots = new List<GameObject>(); // Track asteroid dots on minimap
+
+    [Header("Fog of War Settings")]
+    public Material fogOfWarMaterial;  // Assign the Fog of War material here
+    public float revealRadius = 5.0f;  // The radius of the revealed area
+
+    private Vector4 playerPositionInShader;
+
+    private Camera mainCamera;
+
     [Header("Player Health Settings")]
     public int maxHealth = 10; // Maximum health for the player
     private int currentHealth;
@@ -39,7 +65,7 @@ public class PlayerController : MonoBehaviour
     public float zoomSmoothSpeed = 5f;  // Smooth transition speed between zoom levels
 
     // Predefined zoom levels
-    private readonly float[] zoomLevels = { 4f, 8f, 16f, 24f, 36f };
+    private readonly float[] zoomLevels = { 8f, 16f, 24f, 36f, 48f, 64f, };
     private int currentZoomIndex;  // The current zoom level index
 
     private Vector2 moveInput;
@@ -54,8 +80,6 @@ public class PlayerController : MonoBehaviour
     private float dashTime;
     private float dashCooldownTimer;
     private float shootingCooldownTimer;
-
-    private Camera mainCamera;
     private Rigidbody2D rb;
 
     // Input System
@@ -105,6 +129,9 @@ public class PlayerController : MonoBehaviour
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
         healthBarUI.SetActive(false); // Initially hide the health bar
+
+        minimapSmallUI.SetActive(true);
+        minimapFullUI.SetActive(false);
     }
 
     void Update()
@@ -113,7 +140,19 @@ public class PlayerController : MonoBehaviour
         HandleDashTimer();
         HandleShooting();
         UpdateThrusters();
-        HandleCameraZoom(); // Handle zooming in/out
+        HandleCameraZoom();
+
+        // Update player and asteroid positions on the minimap
+        UpdateMinimapEntities();
+        UpdateMinimapViewportFrame();
+
+        // Toggle fullscreen minimap on 'M' keypress
+        if (Keyboard.current.mKey.wasPressedThisFrame)
+        {
+            ToggleMinimap();
+        }
+
+        UpdateFogOfWar();
     }
 
     void FixedUpdate()
@@ -318,5 +357,69 @@ int GetClosestZoomIndex(float currentZoom)
         {
             TakeDamage(1); // Take 1 damage if hit by asteroid
         }
+    }
+
+    private void ToggleMinimap()
+    {
+        isMinimapFull = !isMinimapFull;
+
+        if (isMinimapFull)
+        {
+            // Show the fullscreen minimap and hide the small one
+            minimapFullUI.SetActive(true);
+            minimapSmallUI.SetActive(false);
+        }
+        else
+        {
+            // Show the small minimap and hide the fullscreen one
+            minimapFullUI.SetActive(false);
+            minimapSmallUI.SetActive(true);
+        }
+    }
+
+    // Update the position of player and asteroid dots on the minimap
+    private void UpdateMinimapEntities()
+    {
+        // Update player dot
+        Vector3 playerPos = transform.position;
+        playerDot.transform.position = GetMinimapPosition(playerPos);
+
+        // Update asteroid dots
+        foreach (GameObject asteroidDot in asteroidDots)
+        {
+            Asteroid asteroid = asteroidDot.GetComponent<Asteroid>();
+            Vector3 asteroidPos = asteroid.transform.position;
+            asteroidDot.transform.position = GetMinimapPosition(asteroidPos);
+        }
+    }
+
+    // Convert world position to minimap position
+    private Vector3 GetMinimapPosition(Vector3 worldPos)
+    {
+        Vector3 minimapPos = minimapCamera.WorldToViewportPoint(worldPos);
+        return new Vector3(minimapPos.x * minimapRenderTexture.width, minimapPos.y * minimapRenderTexture.height, 0f);
+    }
+
+    // Update the minimap viewport frame to match the player's current camera view
+    private void UpdateMinimapViewportFrame()
+    {
+        Vector3 cameraPos = mainCamera.transform.position;
+        playerViewportFrame.position = GetMinimapPosition(cameraPos);
+
+        // Set the size of the frame to represent the camera's current orthographic size
+        playerViewportFrame.sizeDelta = new Vector2(mainCamera.orthographicSize * 2f, mainCamera.orthographicSize * 2f);
+    }
+
+    private void UpdateFogOfWar()
+    {
+        // Get the player's position in world space
+        Vector3 playerPos = transform.position;
+
+        // Convert player's position into a format the shader understands (screen space)
+        playerPositionInShader = new Vector4(playerPos.x, playerPos.y, 0, 0);
+
+        // Send the player's position and the reveal radius to the shader
+        fogOfWarMaterial.SetVector("_PlayerPos", playerPositionInShader);
+        fogOfWarMaterial.SetFloat("_RevealRadius", revealRadius);
     }
 }

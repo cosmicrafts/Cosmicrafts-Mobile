@@ -61,6 +61,6 @@ public class Bullet : MonoBehaviour
         }
 
         // Optionally, add animation to move the text upwards in an arc
-        Destroy(damageText, .15f); // Destroy the damage text after 1 second
+        Destroy(damageText, .25f); // Destroy the damage text after 1 second
     }
 }

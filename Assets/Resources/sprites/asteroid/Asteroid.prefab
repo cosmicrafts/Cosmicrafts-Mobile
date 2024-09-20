@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5259616248360596539}
   - component: {fileID: 7807174602945204154}
-  m_Layer: 1
+  m_Layer: 10
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 6052367794722924886}
   - component: {fileID: 5281812775428470645}
   - component: {fileID: 3868622017435881936}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: Asteroid
   m_TagString: Asteroid
   m_Icon: {fileID: 0}
@@ -270,7 +270,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5297951910137588449}
-  m_Layer: 1
+  m_Layer: 10
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 7909930007031337510}
   - component: {fileID: 1496564372896817129}
   - component: {fileID: 219437210401206090}
-  m_Layer: 1
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 6392143859081136889}
   - component: {fileID: 6568344833608607653}
   - component: {fileID: 6904856790301759294}
-  m_Layer: 1
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 5030585672132492982}
   - component: {fileID: 8855119857180263769}
   - component: {fileID: 3380680788113449702}
-  m_Layer: 1
+  m_Layer: 10
   m_Name: Healthbar
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
