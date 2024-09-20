@@ -5,7 +5,7 @@ public class SpaceProceduralGenerator : MonoBehaviour
 {
     [Header("Space Tile Settings")]
     public GameObject spaceTilePrefab;  // Prefab for space tiles
-    public float tileWorldSize = 16f;    // Size of each tile in world units
+    public float tileWorldSize = 16f;   // Size of each tile in world units, adjust based on sprite PPU
     public int renderDistance = 4;      // How many chunks to generate around the player
     public int spaceLayer = 3;          // Layer for space tiles (e.g., background)
 
@@ -54,7 +54,7 @@ public class SpaceProceduralGenerator : MonoBehaviour
 
         // Create new space tile chunk
         GameObject newChunk = Instantiate(spaceTilePrefab);
-        newChunk.transform.position = new Vector3(chunkCoord.x * tileWorldSize, chunkCoord.y * tileWorldSize, 0); // Use X and Y for 2D space
+        newChunk.transform.position = new Vector3(chunkCoord.x * tileWorldSize, chunkCoord.y * tileWorldSize, 0); // Ensure tiles are placed next to each other
         newChunk.name = $"SpaceTile_{chunkCoord.x}_{chunkCoord.y}";
         newChunk.layer = spaceLayer; // Assign space tile to the specified layer
 
