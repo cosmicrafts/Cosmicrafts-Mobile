@@ -281,7 +281,7 @@ MonoBehaviour:
   - {fileID: 582460870}
   bulletPrefab: {fileID: 8260421220360360718, guid: 535d954a18f375f65af4e09f16729c87,
     type: 3}
-  bulletSpeed: 15
+  bulletSpeed: 20
   shootingCooldown: 0.1
   muzzleFlashPrefab: {fileID: 5460127182250096457, guid: 6a31f1870254c504d93b909a93023824,
     type: 3}
@@ -396,7 +396,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0418c81634a0b474f81e882bca906ea3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f0eda5b895615bb49afd47856af65c8e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 1
@@ -450,7 +450,7 @@ Transform:
   m_GameObject: {fileID: 582460869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.12, y: 4.29, z: 0}
+  m_LocalPosition: {x: 0, y: 1.79, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -688,6 +688,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1368574892}
   - component: {fileID: 1368574891}
+  - component: {fileID: 1368574893}
   m_Layer: 10
   m_Name: Thruster2
   m_TagString: Untagged
@@ -759,12 +760,34 @@ Transform:
   m_GameObject: {fileID: 1368574890}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.62, y: -4.0400004, z: 1}
-  m_LocalScale: {x: 2.6688, y: 2.6688, z: 2.6688}
+  m_LocalPosition: {x: -1.57, y: -4.8755, z: 1}
+  m_LocalScale: {x: 3.253801, y: 3.253801, z: 3.253801}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 243519800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!95 &1368574893
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368574890}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 03871d1b2a6534740bdd8c0abc2cd0b6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1477628585
 GameObject:
   m_ObjectHideFlags: 0
@@ -942,6 +965,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2068807182}
   - component: {fileID: 2068807181}
+  - component: {fileID: 2068807183}
   m_Layer: 10
   m_Name: Thruster1
   m_TagString: Untagged
@@ -1013,12 +1037,34 @@ Transform:
   m_GameObject: {fileID: 2068807180}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 2.12, y: -3.99, z: 1}
-  m_LocalScale: {x: 2.6688, y: 2.6688, z: 2.6688}
+  m_LocalPosition: {x: 1.86, y: -4.8145, z: 1}
+  m_LocalScale: {x: 3.253801, y: 3.253801, z: 3.253801}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 243519800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!95 &2068807183
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068807180}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 03871d1b2a6534740bdd8c0abc2cd0b6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
