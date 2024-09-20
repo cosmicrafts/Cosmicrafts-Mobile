@@ -1,9 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEngine.UI;
+
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player Health Settings")]
+    public int maxHealth = 10; // Maximum health for the player
+    private int currentHealth;
+    
+    public GameObject healthBarUI; // Health bar UI for the player
+    public Slider healthSlider; // Health bar slider
+
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float moveSmoothTime = 0.1f;
@@ -91,6 +100,11 @@ public class PlayerController : MonoBehaviour
 
         // Initialize the zoom level to the closest matching level to the current orthographic size
         currentZoomIndex = GetClosestZoomIndex(mainCamera.orthographicSize);
+
+        currentHealth = maxHealth;
+        healthSlider.maxValue = maxHealth;
+        healthSlider.value = currentHealth;
+        healthBarUI.SetActive(false); // Initially hide the health bar
     }
 
     void Update()
@@ -217,9 +231,6 @@ void Shoot()
         }
     }
 }
-
-
-
     // Update thrusters based on movement or dash
     void UpdateThrusters()
     {
@@ -284,5 +295,28 @@ int GetClosestZoomIndex(float currentZoom)
     void FireLaser()
     {
         // Implement laser firing logic here
+    }
+
+    private void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            // Handle player death, like resetting or game over logic
+            Debug.Log("Player has died!");
+        }
+        else
+        {
+            healthBarUI.SetActive(true); // Show health bar if damaged
+            healthSlider.value = currentHealth; // Update health bar
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Asteroid"))
+        {
+            TakeDamage(1); // Take 1 damage if hit by asteroid
+        }
     }
 }

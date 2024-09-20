@@ -190,5 +190,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletImpactPrefab: {fileID: 8601097328188198969, guid: 7ab7b8d1f2f5a3f408ab55ec19fabc50,
     type: 3}
+  damageTextPrefab: {fileID: 7945968234256854471, guid: 804729df4cbfc0f47823df90a30d550c,
+    type: 3}
   impactDestroyDelay: 0.1
+  damage: 1
   lifespan: 12
