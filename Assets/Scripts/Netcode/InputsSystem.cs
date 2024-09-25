@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Collections;
+using Unity.Mathematics;
 
 [UpdateInGroup(typeof(GhostInputSystemGroup))]
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
@@ -30,9 +31,17 @@ public partial class InputsSystem : SystemBase
         Vector2 playerMove = _controls.Move.Moveaction.ReadValue<Vector2>();
 
         // Apply player movement to the PlayerInputData
-        foreach (RefRW<PlayerInputData> input in SystemAPI.Query<RefRW<PlayerInputData>>().WithAll<GhostOwnerIsLocal>())
+        foreach (var (input, transform, targetPosition) in SystemAPI.Query<RefRW<PlayerInputData>, RefRO<LocalTransform>, RefRW<TargetPosition>>().WithAll<GhostOwnerIsLocal>())
         {
-            input.ValueRW.move = playerMove;
+            // Update the PlayerInputData to track the current movement
+            input.ValueRW.move = new float2(playerMove.x, playerMove.y);
+
+            // Update the target position based on the player’s current position and input
+            float2 currentPosition = transform.ValueRO.Position.xy;
+            float2 newTargetPosition = currentPosition + input.ValueRW.move; // Moves to new direction
+            
+            // Set the new target position for movement
+            targetPosition.ValueRW.Value = newTargetPosition;
         }
     }
 }
