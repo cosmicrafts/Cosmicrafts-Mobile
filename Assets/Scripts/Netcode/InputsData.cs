@@ -5,7 +5,7 @@ using UnityEditor;
 [GhostComponent(PrefabType = GhostPrefabType.AllPredicted)]
 public struct PlayerInputData : IInputComponentData
 {
-    //For the values to be sync across server ex move entities
+    // For 2D movement (x, y)
     public float2 move;
     public InputEvent jump;
 }

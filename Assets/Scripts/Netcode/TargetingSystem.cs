@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Jobs;
 using Unity.NetCode;
-using UnityEngine; // Needed for Debug.Log
+using UnityEngine;
 
 [BurstCompile]
 public partial struct TargetingSystem : ISystem
@@ -79,10 +79,10 @@ public partial struct TargetingSystem : ISystem
             UnitStateType = unitStateType,
             EntityTypeHandle = entityTypeHandle,
             EnemyChunks = enemyChunks,
-            EnemyTransformType = enemyTransformType, // Use pre-initialized handle
-            EnemyTeamType = enemyTeamType,           // Use pre-initialized handle
+            EnemyTransformType = enemyTransformType,
+            EnemyTeamType = enemyTeamType,
             CommandBuffer = commandBuffer.AsParallelWriter(),
-            DebugEntityManager = state.EntityManager // Pass EntityManager for debug logs
+            DebugEntityManager = state.EntityManager
         };
 
         // Schedule the job in parallel
@@ -97,89 +97,89 @@ public partial struct TargetingSystem : ISystem
         enemyChunks.Dispose();
     }
 
-[BurstCompile]
-struct TargetingJob : IJobChunk
-{
-    public float Time;
-    [ReadOnly] public ComponentTypeHandle<LocalTransform> UnitTransformType;
-    [ReadOnly] public ComponentTypeHandle<CombatData> UnitCombatType;
-    [ReadOnly] public ComponentTypeHandle<Team> UnitTeamType;
-    public ComponentTypeHandle<UnitState> UnitStateType;
-    [ReadOnly] public EntityTypeHandle EntityTypeHandle;
-
-    [ReadOnly] public NativeArray<ArchetypeChunk> EnemyChunks;
-    [ReadOnly] public ComponentTypeHandle<LocalTransform> EnemyTransformType;
-    [ReadOnly] public ComponentTypeHandle<Team> EnemyTeamType;
-
-    public EntityCommandBuffer.ParallelWriter CommandBuffer;
-
-    [NativeDisableParallelForRestriction]
-    [ReadOnly] public EntityManager DebugEntityManager;
-
-    public void Execute(in ArchetypeChunk chunk, int chunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
+    [BurstCompile]
+    struct TargetingJob : IJobChunk
     {
-        var unitTransforms = chunk.GetNativeArray(ref UnitTransformType);
-        var unitCombats = chunk.GetNativeArray(ref UnitCombatType);
-        var unitTeams = chunk.GetNativeArray(ref UnitTeamType);
-        var unitStates = chunk.GetNativeArray(ref UnitStateType);
-        var entities = chunk.GetNativeArray(EntityTypeHandle);
+        public float Time;
+        [ReadOnly] public ComponentTypeHandle<LocalTransform> UnitTransformType;
+        [ReadOnly] public ComponentTypeHandle<CombatData> UnitCombatType;
+        [ReadOnly] public ComponentTypeHandle<Team> UnitTeamType;
+        public ComponentTypeHandle<UnitState> UnitStateType;
+        [ReadOnly] public EntityTypeHandle EntityTypeHandle;
 
-        for (int i = 0; i < chunk.Count; i++)
+        [ReadOnly] public NativeArray<ArchetypeChunk> EnemyChunks;
+        [ReadOnly] public ComponentTypeHandle<LocalTransform> EnemyTransformType;
+        [ReadOnly] public ComponentTypeHandle<Team> EnemyTeamType;
+
+        public EntityCommandBuffer.ParallelWriter CommandBuffer;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly] public EntityManager DebugEntityManager;
+
+        public void Execute(in ArchetypeChunk chunk, int chunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
         {
-            if (useEnabledMask && !BitmaskHelper.IsSet(chunkEnabledMask, i)) 
-                continue;
+            var unitTransforms = chunk.GetNativeArray(ref UnitTransformType);
+            var unitCombats = chunk.GetNativeArray(ref UnitCombatType);
+            var unitTeams = chunk.GetNativeArray(ref UnitTeamType);
+            var unitStates = chunk.GetNativeArray(ref UnitStateType);
+            var entities = chunk.GetNativeArray(EntityTypeHandle);
 
-            var unitEntity = entities[i];
-            var unitCombat = unitCombats[i];
-            var unitState = unitStates[i];
-            float3 targetPosition = unitTransforms[i].Position;
-            bool hasTarget = false;
-
-            foreach (var enemyChunk in EnemyChunks)
+            for (int i = 0; i < chunk.Count; i++)
             {
-                var enemyTransforms = enemyChunk.GetNativeArray(ref EnemyTransformType);
-                var enemyTeams = enemyChunk.GetNativeArray(ref EnemyTeamType);
+                if (useEnabledMask && !BitmaskHelper.IsSet(chunkEnabledMask, i)) 
+                    continue;
 
-                for (int j = 0; j < enemyChunk.Count; j++)
+                var unitEntity = entities[i];
+                var unitCombat = unitCombats[i];
+                var unitState = unitStates[i];
+                float2 targetPosition = unitTransforms[i].Position.xy; // Use 2D position (x, y)
+                bool hasTarget = false;
+
+                foreach (var enemyChunk in EnemyChunks)
                 {
-                    if (unitTeams[i].Value == enemyTeams[j].Value)
-                        continue;
+                    var enemyTransforms = enemyChunk.GetNativeArray(ref EnemyTransformType);
+                    var enemyTeams = enemyChunk.GetNativeArray(ref EnemyTeamType);
 
-                    float distance = math.distance(unitTransforms[i].Position, enemyTransforms[j].Position);
-                    if (distance <= unitCombat.DetectionRange)
+                    for (int j = 0; j < enemyChunk.Count; j++)
                     {
-                        hasTarget = true;
-                        targetPosition = enemyTransforms[j].Position;
+                        if (unitTeams[i].Value == enemyTeams[j].Value)
+                            continue;
 
-                        // Ensure ProjectileData is only added if it doesn't already exist
-                        if (!DebugEntityManager.HasComponent<ProjectileData>(unitEntity))
+                        float distance = math.distance(unitTransforms[i].Position.xy, enemyTransforms[j].Position.xy);
+                        if (distance <= unitCombat.DetectionRange)
                         {
-                            CommandBuffer.AddComponent(chunkIndex, unitEntity, new ProjectileData
+                            hasTarget = true;
+                            targetPosition = enemyTransforms[j].Position.xy;
+
+                            // Ensure ProjectileData is only added if it doesn't already exist
+                            if (!DebugEntityManager.HasComponent<ProjectileData>(unitEntity))
                             {
-                                Damage = unitCombat.AttackDamage,
-                                Speed = 10f,
-                                Target = unitEntity
-                            });
+                                CommandBuffer.AddComponent(chunkIndex, unitEntity, new ProjectileData
+                                {
+                                    Damage = unitCombat.AttackDamage,
+                                    Speed = 10f,
+                                    Target = unitEntity
+                                });
+                            }
+
+                            unitState.IsAttacking = true;
+                            unitStates[i] = unitState;
+                            CommandBuffer.SetComponent(chunkIndex, unitEntity, new TargetPosition { Value = new float3(targetPosition, 0f) }); // 2D target with z = 0
+                            break;
                         }
-
-                        unitState.IsAttacking = true;
-                        unitStates[i] = unitState;
-                        CommandBuffer.SetComponent(chunkIndex, unitEntity, new TargetPosition { Value = targetPosition });
-                        break;
                     }
-                }
 
-                if (hasTarget) break;
+                    if (hasTarget) break;
+                }
             }
         }
     }
-}
+
     // Helper for bitmask checking
     public static class BitmaskHelper
     {
         public static bool IsSet(v128 mask, int index)
         {
-            // Assuming 128-bit mask for 128 entities, check the bit corresponding to the index
             return (mask.SInt0 & (1 << index)) != 0;
         }
     }

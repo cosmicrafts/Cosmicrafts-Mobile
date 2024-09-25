@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;  // For Quaternion
 
 [BurstCompile]
 public partial struct UnitRotationSystem : ISystem
@@ -19,15 +18,19 @@ public partial struct UnitRotationSystem : ISystem
         // Update each unit's rotation based on its movement direction (TargetPosition)
         foreach (var (transform, targetPosition) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TargetPosition>>())
         {
-            float3 direction = math.normalize(targetPosition.ValueRO.Value - transform.ValueRW.Position);
+            float2 direction = math.normalize(targetPosition.ValueRO.Value.xy - transform.ValueRW.Position.xy);
 
             // If there's significant movement, rotate the unit to face the direction
             if (math.lengthsq(direction) > 0.01f)
             {
-                quaternion targetRotation = quaternion.LookRotationSafe(direction, math.up());
+                // Calculate the angle for 2D rotation in radians (relative to the positive x-axis)
+                float angle = math.atan2(direction.y, direction.x);
+
+                // Convert the angle into a quaternion for 2D (rotation only around the z-axis)
+                quaternion targetRotation = quaternion.Euler(0, 0, angle);
 
                 // Smoothly rotate towards the target direction
-                transform.ValueRW.Rotation = math.slerp(transform.ValueRW.Rotation, targetRotation, deltaTime * 12f); // You can adjust the speed
+                transform.ValueRW.Rotation = math.slerp(transform.ValueRW.Rotation, targetRotation, deltaTime * 12f);
             }
         }
     }

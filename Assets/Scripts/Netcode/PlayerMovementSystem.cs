@@ -14,7 +14,7 @@ public partial struct PlayerMovementSystem : ISystem
     public void OnCreate(ref SystemState state)
     {
         var builder = new EntityQueryBuilder(Allocator.Temp);
-        //it needs to have all 3 in order to execute PD PID LT
+        // It needs to have all 3 in order to execute PD, PID, LT
         builder.WithAll<PlayerData, PlayerInputData, LocalTransform>();
         state.RequireForUpdate(state.GetEntityQuery(builder));
     }
@@ -34,9 +34,13 @@ public partial struct PlayerMovementSystem : ISystem
 public partial struct PlayerMovementJob : IJobEntity
 {
     public float deltaTime;
+    
     public void Execute(PlayerData player, PlayerInputData input, ref LocalTransform transform)
     {
-        float3 movement = new float3(input.move.x, 0, input.move.y) * player.speed * deltaTime;
-        transform.Position = transform.Translate(movement).Position;
+        // Adjust for 2D movement (x and y only, z remains 0)
+        float2 movement = new float2(input.move.x, input.move.y) * player.speed * deltaTime;
+
+        // Directly update the 2D position on the top-down plane
+        transform.Position = new float3(transform.Position.x + movement.x, transform.Position.y + movement.y, 0f);
     }
 }

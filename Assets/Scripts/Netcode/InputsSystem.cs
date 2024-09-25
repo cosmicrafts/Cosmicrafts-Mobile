@@ -7,12 +7,13 @@ using Unity.Collections;
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 public partial class InputsSystem : SystemBase
 {
-    private Controls _controls;
+    private PlayerControls _controls;
 
     protected override void OnCreate()
     {
-        _controls = new Controls();
+        _controls = new PlayerControls();
         _controls.Enable();
+
         var builder = new EntityQueryBuilder(Allocator.Temp);
         builder.WithAny<PlayerInputData>();
         RequireForUpdate(GetEntityQuery(builder));
@@ -25,7 +26,10 @@ public partial class InputsSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        Vector2 playerMove = _controls.Player.Move.ReadValue<Vector2>();
+        // Get player movement inputs from the PlayerControls.inputactions
+        Vector2 playerMove = _controls.Move.Moveaction.ReadValue<Vector2>();
+
+        // Apply player movement to the PlayerInputData
         foreach (RefRW<PlayerInputData> input in SystemAPI.Query<RefRW<PlayerInputData>>().WithAll<GhostOwnerIsLocal>())
         {
             input.ValueRW.move = playerMove;

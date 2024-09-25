@@ -1,11 +1,13 @@
-using UnityEngine;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
     public float speed = 3f;
     public float attackRange = 5f;
-    public float detectionRange = 10f;  // Add detection range
+    public float detectionRange = 10f;
     public float attackDamage = 10f;
     public float hitPoints = 100f;
 }
@@ -24,11 +26,11 @@ public class UnitBaker : Baker<Unit>
         AddComponent(entity, new CombatData 
         { 
             AttackRange = authoring.attackRange,
-            DetectionRange = authoring.detectionRange,  // Set detection range
+            DetectionRange = authoring.detectionRange,
             AttackDamage = authoring.attackDamage,
             HitPoints = authoring.hitPoints
         });
-        AddComponent<UnitState>(entity);  // Add state management for units
+        AddComponent<UnitState>(entity);
         AddComponent(entity, new Team { Value = 0 });
     }
 }
