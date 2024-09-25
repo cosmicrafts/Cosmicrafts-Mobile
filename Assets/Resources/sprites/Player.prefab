@@ -170,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 2875284315957299358}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -57621.223, y: -21194.816, z: 0}
+  m_LocalPosition: {x: -56451.984, y: -21093.36, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -312,13 +312,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minimapSmallUI: {fileID: 0}
   minimapFullUI: {fileID: 0}
-  fogOfWarMesh: {fileID: 0}
   minimapCamera: {fileID: 0}
   minimapRenderTexture: {fileID: 0}
   playerDot: {fileID: 0}
   asteroidDotPrefab: {fileID: 0}
   playerViewportFrame: {fileID: 0}
-  fogOfWarMask: {fileID: 0}
   fogOfWarMaterial: {fileID: 0}
   revealRadius: 5
   maxHealth: 10
