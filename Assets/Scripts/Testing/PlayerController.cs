@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     public GameObject minimapSmallUI;
     public GameObject minimapFullUI;
     public GameObject fogOfWarMesh;
-    private bool isFullMapActive = false;
 
     public Camera minimapCamera; // Secondary minimap camera
     public RenderTexture minimapRenderTexture; // Render texture for minimap
