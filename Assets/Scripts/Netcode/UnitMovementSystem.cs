@@ -26,11 +26,8 @@ public partial struct UnitMovementSystem : ISystem
             if (!unitState.ValueRW.IsAttacking)
             {
                 float3 direction = math.normalize(targetPosition.ValueRO.Value - transform.ValueRW.Position);
-                if (math.length(direction) > 0.01f)
-                {
                     float3 movement = direction * unitData.ValueRO.speed * deltaTime;
                     transform.ValueRW.Position += movement;
-                }
             }
         }
     }

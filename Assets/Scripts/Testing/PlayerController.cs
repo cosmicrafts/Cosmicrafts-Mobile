@@ -82,11 +82,11 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
 
     // Input System
-    private PlayerControls controls;
+    private Controls controls;
 
     private void Awake()
     {
-        controls = new PlayerControls();
+        controls = new Controls();
 
         // Movement
         controls.Move.Moveaction.performed += ctx => moveInput = ctx.ReadValue<Vector2>();

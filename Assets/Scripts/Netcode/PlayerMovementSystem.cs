@@ -36,7 +36,10 @@ public partial struct PlayerMovementJob : IJobEntity
     public float deltaTime;
     public void Execute(PlayerData player, PlayerInputData input, ref LocalTransform transform)
     {
-        float3 movement = new float3(input.move.x, 0, input.move.y) * player.speed * deltaTime;
+        // Use X and Y for 2D movement
+        float3 movement = new float3(input.move.x, input.move.y, 0) * player.speed * deltaTime;
+
+        // Apply the movement to the player's position
         transform.Position = transform.Translate(movement).Position;
     }
 }
